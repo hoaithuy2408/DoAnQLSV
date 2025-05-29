@@ -1,0 +1,82 @@
+﻿@model QLSV.Models.Khht
+
+@{
+    ViewData["Title"] = "Xóa Kế hoạch học tập";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-11 col-lg-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 text-white">XÓA KẾ HOẠCH HỌC TẬP</h5>
+                        <a asp-action="Index" class="btn btn-light btn-sm">
+                            <i class="bi bi-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-danger mb-4">
+                        <h5 class="alert-heading"><i class="bi bi-exclamation-triangle-fill"></i> Cảnh báo</h5>
+                        <p class="mb-0">Bạn có chắc chắn muốn xóa kế hoạch học tập này không? Thao tác này không thể hoàn tác.</p>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-medium">Tên KHHT</label>
+                            <div class="form-control bg-light">@Html.DisplayFor(m => m.TenKhht)</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-medium">Tổng số TC</label>
+                            <div class="form-control bg-light">@Html.DisplayFor(m => m.SoTctong)</div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-medium">TC tự chọn</label>
+                            <div class="form-control bg-light">@Html.DisplayFor(m => m.SoTctuChon)</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-medium">TC bắt buộc</label>
+                            <div class="form-control bg-light">@Html.DisplayFor(m => m.SoTcbatBuoc)</div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-medium">CTĐT</label>
+                            <div class="form-control bg-light">@Model.MaCtdtNavigation.TenCtdt</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-medium">Niên khóa</label>
+                            <div class="form-control bg-light">@Model.MaNkNavigation.TenNk</div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-medium">Năm học</label>
+                            <div class="form-control bg-light">@Model.MaNhNavigation.TenNh</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-medium">Học kỳ</label>
+                            <div class="form-control bg-light">@Model.MaHkNavigation.TenHk</div>
+                        </div>
+                    </div>
+
+                    <form asp-action="Delete" asp-route-id="@Model.MaKhht" class="d-flex justify-content-between mt-4">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash-fill me-1"></i> Xác nhận xóa
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

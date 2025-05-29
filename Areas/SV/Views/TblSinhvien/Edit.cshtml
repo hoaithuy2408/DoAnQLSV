@@ -1,0 +1,112 @@
+﻿@model QLSV.Models.Sinhvien
+
+@{
+    ViewData["Title"] = "Chỉnh sửa Sinh viên";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary py-3 text-white">
+                    <h5 class="mb-0">CHỈNH SỬA SINH VIÊN</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <!-- Hiển thị ảnh hiện tại -->
+                        <div class="text-center mb-4">
+                            <img id="preview" src="@Model.Anh" alt="Ảnh sinh viên" width="120" class="rounded-circle" />
+                        </div>
+
+                        <!-- Chỉ cho upload ảnh mới -->
+                        <div class="mb-3">
+                            <label for="Anh" class="form-label">Ảnh đại diện</label>
+                            <input type="file"
+                                   name="Anh"
+                                   class="form-control"
+                                   accept="image/*"
+                                   onchange="previewImage(event)" />
+                            <span asp-validation-for="Anh" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Ngày sinh -->
+                        <div class="mb-3">
+                            <label asp-for="NgaySinh" class="form-label">Ngày sinh</label>
+                            <input asp-for="NgaySinh"
+                                   class="form-control"
+                                   type="date" />
+                            <span asp-validation-for="NgaySinh" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Quê quán -->
+                        <div class="mb-3">
+                            <label asp-for="QueQuan" class="form-label">Quê quán</label>
+                            <input asp-for="QueQuan"
+                                   class="form-control" />
+                            <span asp-validation-for="QueQuan" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Địa chỉ thường trú -->
+                        <div class="mb-3">
+                            <label asp-for="DiaChi" class="form-label">Địa chỉ thường trú</label>
+                            <input asp-for="DiaChi"
+                                   class="form-control" />
+                            <span asp-validation-for="DiaChi" class="text-danger small"></span>
+                        </div>
+
+                        <hr />
+
+                        <!-- Các trường khác chỉ hiển thị, không bind -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Mã SV</label>
+                                <input class="form-control" value="@Model.MaSv" readonly />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Họ tên</label>
+                                <input class="form-control" value="@Model.HoTen" readonly />
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <input class="form-control" value="@Model.Email" readonly />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Tên đăng nhập</label>
+                                <input class="form-control" value="@Model.TenDn" readonly />
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-save-fill me-1"></i> Lưu thay đổi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function previewImage(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                document.getElementById('preview').src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

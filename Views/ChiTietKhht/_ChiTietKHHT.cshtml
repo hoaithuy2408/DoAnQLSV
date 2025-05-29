@@ -1,0 +1,74 @@
+﻿@model List<QLSV.Models.CtKhht>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <thead >
+            <tr style="text-align:center">
+                <th width="5%">STT</th>
+                <th width="10%">Mã MH</th>
+                <th>Tên môn học</th>
+                <th width="8%">Số TC</th>
+                <th width="12%">Loại môn</th>
+                <th width="12%">Hành động</th>
+                <th>Ghi chú</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="7" class="text-center py-3 text-muted">
+                        <i class="bi bi-info-circle"></i> Không có môn học nào
+                    </td>
+                </tr>
+            }
+            else
+            {
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    var item = Model[i];
+                    <tr>
+                        <td class="text-center">@(i + 1)</td>
+                        <td>@item.MaMh</td>
+                        <td>@item.MaMhNavigation?.TenMh</td>
+                        <td class="text-center">@item.MaMhNavigation?.SoTc</td>
+                        <td>
+                                @(item.LoaiMh == true ? "Bắt buộc" : "Tự chọn")
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center gap-2">
+
+                                <a asp-controller="ChiTietKhht"
+                                   asp-action="Delete"
+                                   asp-route-maKhht="@item.MaKhht"
+                                   asp-route-maMh="@item.MaMh"
+                                   class="btn btn-outline-danger btn-sm rounded-circle"
+                                   data-bs-toggle="tooltip" title="Xóa">
+                                    <i class="bi bi-trash-fill"></i>
+                                </a>
+                            </div>
+                        </td>
+                        <td class="text-muted">
+                            @item.GhiChu
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .table {
+        font-size: 14px;
+    }
+
+        .table th {
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .table td {
+            vertical-align: middle;
+        }
+</style>

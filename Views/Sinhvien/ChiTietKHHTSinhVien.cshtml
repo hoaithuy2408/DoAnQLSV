@@ -1,0 +1,160 @@
+﻿@model List<QLSV.Models.CtKhhtSv>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-warning">
+        @(ViewBag.Message ?? "Không có dữ liệu hiển thị")
+    </div>
+}
+else
+{
+    <div class="card">
+        <div class="card-header bg-primary">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="text-white mb-0">Danh sách học phần</h4>
+                <button id="toggleRegisterMode"
+                        class="btn @(ViewBag.DangKyMode ? "btn-light" : "btn-warning")">
+                    @(ViewBag.DangKyMode ? "Thoát chế độ đăng ký" : "Đăng ký KHHT")
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <!-- Form lọc -->
+            <form id="filterForm" class="mb-4">
+                <input type="hidden" name="maSv" value="@ViewBag.MaSv" />
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label">Năm học</label>
+                        <select class="form-select" name="maNh">
+                            <option value="">-- Chọn năm học --</option>
+                            @foreach (var nh in ViewBag.NamHocs as List<SelectListItem>)
+                            {
+                                <option value="@nh.Value" selected="@nh.Selected">@nh.Text</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Học kỳ</label>
+                        <select class="form-select" name="maHk">
+                            <option value="">-- Chọn học kì  --</option>
+                            @foreach (var hk in ViewBag.HocKys as List<SelectListItem>)
+                            {
+                                <option value="@hk.Value" selected="@hk.Selected">@hk.Text</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn  w-100" style="background:#6694d2; color: white">Lọc</button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- BẢNG MÔN HỌC -->
+            <div id="khhtPartialContainer">
+                @await Html.PartialAsync("_DanhSachMonHocPartial", Model)
+            </div>
+        </div>
+    </div>
+}
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Biến lưu trạng thái chế độ đăng ký
+            let isRegisterMode = @(ViewBag.DangKyMode != null && ViewBag.DangKyMode ? "true" : "false");
+
+            // Xử lý nút chuyển đổi chế độ
+            $('#toggleRegisterMode').click(function() {
+                isRegisterMode = !isRegisterMode;
+
+                // Cập nhật giao diện nút
+                $(this).toggleClass('btn-primary btn-secondary');
+                $(this).text(isRegisterMode ? "Thoát chế độ đăng ký" : "Đăng ký KHHT");
+
+                // Load lại dữ liệu với chế độ mới
+                updateRegisterMode();
+            });
+
+            // Hàm cập nhật chế độ đăng ký
+            function updateRegisterMode() {
+                const formData = $('#filterForm').serializeArray();
+                formData.push({ name: 'dangKyMode', value: isRegisterMode });
+
+                $.ajax({
+                    url: '@Url.Action("ChiTietKHHTSinhVienPartial", "Sinhvien")',
+                    type: 'GET',
+                    data: formData,
+                    success: function(result) {
+                        $('#khhtPartialContainer').html(result);
+                    },
+                    error: function() {
+                        alert('Có lỗi xảy ra khi chuyển chế độ');
+                        isRegisterMode = !isRegisterMode; // Rollback trạng thái nếu lỗi
+                    }
+                });
+            }
+
+            // Xử lý lọc dữ liệu
+            $('#filterForm').submit(function (e) {
+                e.preventDefault();
+                updateRegisterMode();
+            });
+
+            // Xử lý đăng ký môn học
+            $(document).on('submit', '#registrationForm', function (e) {
+                e.preventDefault();
+
+                var formData = {
+                    maSv: '@ViewBag.MaSv',
+                    courses: []
+                };
+
+                // Duyệt qua từng dòng table
+                $('#registrationForm tbody tr').each(function () {
+                    var $row = $(this);
+
+                    // Tìm checkbox
+                    var checkbox = $row.find('input[type="checkbox"]');
+
+                    if (checkbox.length > 0) {
+                        var selected = checkbox.is(':checked');
+                        var key = checkbox.val(); // Value = "MaKhht_MaMh"
+
+                        // Tìm select năm học, học kỳ trong cùng hàng
+                        var maNh = $row.find('select[name*=".MaNh"]').val();
+                        var maHk = $row.find('select[name*=".MaHk"]').val();
+
+                        formData.courses.push({
+                            key: key,
+                            selected: selected,
+                            maNh: maNh,
+                            maHk: maHk
+                        });
+                    }
+                });
+
+                       $.ajax({
+            url: '@Url.Action("DangKyMonHoc", "Sinhvien")',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+                if (response.success) {
+                    let msg = response.message;
+                    if (response.warnings && response.warnings.length > 0) {
+                        // Hiển thị popup/modal hoặc alert chứa các warning
+                        msg += "\n\nCác môn sau chưa đăng ký được:\n" + response.warnings.join('\n');
+                    }
+                    alert(msg); // hoặc show modal/toast tùy bạn
+                    updateRegisterMode();
+                } else {
+                    alert('Có lỗi xảy ra: ' + response.message);
+                }
+            },
+            error: function () {
+                alert('Lỗi khi gửi dữ liệu đăng ký!');
+            }
+        });
+            });
+        });
+    </script>
+}

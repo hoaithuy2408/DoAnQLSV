@@ -1,0 +1,142 @@
+﻿@model QLSV.Models.Khht
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_layoutAdmin.cshtml";
+}
+
+<style>
+    .container-custom {
+        background: #d1e0eb;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        color: #0c2a53;
+        max-width: 90%;
+        margin: auto;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    h1 {
+        font-size: 24px;
+        font-weight: bold;
+        color: #0b2343;
+    }
+
+    .details-content dl {
+        background: white;
+        padding: 15px;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    dt {
+        font-weight: bold;
+        color: #193b6a;
+    }
+
+</style>
+
+<div class="container-custom">
+    <div class="section-header">
+        <h1>Thông tin Kế hoạch học tập 
+            <a asp-action="Index" class="btn btn-light btn-sm float-end">
+                <i class="bi bi-arrow-left"></i> Quay lại
+            </a>
+        </h1>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-tabs" id="KHHT_Tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab" aria-controls="general" aria-selected="true">
+                Thông tin chung
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="details-tab" data-bs-toggle="tab" data-bs-target="#chitiet-khht-content" type="button" role="tab" aria-controls="chitiet-khht-content" aria-selected="false">
+                Chi tiết KHHT
+            </button>
+        </li>
+    </ul>
+
+    <!-- Nội dung tab -->
+    <div class="tab-content" style="padding-top: 5px ">
+        <div class="tab-pane fade show active" id="general" role="tabpanel">
+            <div class="details-content">
+                <dl class="row">
+                    <dt class="col-sm-4"><strong>Mã KHHT:</strong></dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.MaKhht)</dd>
+
+                    <dt class="col-sm-4"><strong>Tên KHHT:</strong></dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.TenKhht)</dd>
+
+                    <dt class="col-sm-4"><strong>CTDT:</strong></dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.MaCtdtNavigation.TenCtdt)</dd>
+
+                    <dt class="col-sm-4"><strong>Năm học:</strong></dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.MaNhNavigation.TenNh)</dd>
+
+                    <dt class="col-sm-4"><strong>Học kỳ:</strong></dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.MaHkNavigation.TenHk)</dd>
+
+                    <dt class="col-sm-4"><strong>Tổng số TC:</strong></dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.SoTctong)</dd>
+
+                    <dt class="col-sm-4"><strong>Tổng số TC:</strong></dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.SoTctuChon)</dd>
+
+                    <dt class="col-sm-4"><strong>Tổng số TC:</strong></dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.SoTcbatBuoc)</dd>
+                </dl>
+            </div>
+        </div>
+
+
+        <!-- Tab Chi tiết KHHT -->
+        <div class="tab-pane fade" id="chitiet-khht-content" role="tabpanel">
+            <p class="text-center text-muted mt-3">Đang tải dữ liệu...</p>
+        </div>
+    </div>
+
+   
+
+</div>
+
+<script>
+        $(document).ready(function () {
+        var maKhht = "@Model.MaKhht";
+
+        function loadChiTietKhht() {
+            $.ajax({
+                url: "@Url.Action("LoadChiTiet", "ChiTietKhht")",
+                type: "GET",
+                data: { maKhht: maKhht },
+                beforeSend: function () {
+                    $("#chitiet-khht-content").html('<p class="text-center text-muted mt-3">Đang tải dữ liệu...</p>');
+                },
+                success: function (data) {
+                    $("#chitiet-khht-content").html(data);
+                },
+                error: function (xhr, status, error) {
+                    $("#chitiet-khht-content").html('<p class="text-center text-danger mt-3">Lỗi tải dữ liệu.</p>');
+                }
+            });
+        }
+
+        // Khi tab "Chi tiết KHHT" active, luôn load lại dữ liệu mới
+        $('button[data-bs-target="#chitiet-khht-content"]').on('shown.bs.tab', function () {
+            loadChiTietKhht();
+        });
+
+        // Nếu load lần đầu và tab đang active là Chi tiết KHHT, cũng load dữ liệu
+        if ($("#details-tab").hasClass("active")) {
+            loadChiTietKhht();
+        }
+    });
+
+</script>

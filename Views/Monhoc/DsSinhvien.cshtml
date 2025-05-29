@@ -1,0 +1,330 @@
+﻿@model List<QLSV.ViewModel.NhapDiemViewModel>
+
+@{
+    ViewData["Title"] = $"Sinh viên môn {ViewBag.MaMh} - Lớp {ViewBag.MaLop}";
+    Layout = "~/Views/Shared/_layoutAdmin.cshtml";
+
+    // Nhúng Razor → JS
+    var maMh = ViewBag.MaMh as string ?? "";
+    var maLop = ViewBag.MaLop as string ?? "";
+    var maNh = ViewBag.MaNh as string ?? "";
+    var maHk = ViewBag.MaHk as string ?? "";
+
+    // Lấy tỷ lệ cũ từ ViewBag (đã set trong controller)
+    var tyLeQt = (double?)(ViewBag.TyLeQt) ?? 0;
+    var tyLeGk = (double?)(ViewBag.TyLeGk) ?? 0;
+    var tyLeCk = (double?)(ViewBag.TyLeCk) ?? 0;
+}
+<div class="container py-4" style="width: 90%; background:  #d1e0eb; border-radius: 10px;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>Danh sách sinh viên — Lớp @maLop</h4>
+        <div class="mb-4">
+            <button type="button"
+                    class="btn btn-success btn-sm me-2"
+                    data-bs-toggle="modal"
+                    data-bs-target="#tyLeModal">
+                Nhập tỷ lệ điểm
+            </button>
+            <button type="button"
+                    class="btn btn-primary btn-sm"
+                    data-bs-toggle="modal"
+                    data-bs-target="#nhapDiemModal">
+                Nhập điểm
+            </button>
+        </div>
+
+
+    </div>
+
+    <div class="mb-4">
+        <strong>Tỷ lệ đã nhập:</strong>
+        <span class="badge bg-info">QT @tyLeQt.ToString("0.##")%</span>
+        <span class="badge bg-info">GK @tyLeGk.ToString("0.##")%</span>
+        <span class="badge bg-info">CK @tyLeCk.ToString("0.##")%</span>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning">
+            Không có sinh viên nào trong lớp @maLop.
+        </div>
+    }
+    else
+    {
+        <table class="table table-striped mb-0 ">
+            <thead class="table-light">
+                <tr>
+                    <th>STT</th>
+                    <th>Mã SV</th>
+                    <th>Họ tên</th>
+                    <th>QT</th>
+                    <th>GK</th>
+                    <th>CK</th>
+                    <th>TB</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int stt = 1;
+                }
+                @foreach (var sv in Model)
+                {
+                    <tr>
+                        <td>@stt</td>
+                        <td>@sv.MaSv</td>
+                        <td>@sv.HoTen</td>
+                        <td>
+                            @(sv.DiemQt?.ToString("0.##") ?? "-")
+                        </td>
+                        <td>
+                            @(sv.DiemGk?.ToString("0.##") ?? "-")
+                        </td>
+                        <td>
+                            @(sv.DiemCk?.ToString("0.##") ?? "-")
+                        </td>
+                        <td>
+                            @if (sv.DiemQt.HasValue && sv.DiemGk.HasValue && sv.DiemCk.HasValue)
+                            {
+                                @(sv.DiemTb?.ToString("0.##") ?? "-")
+                            }
+                            else
+                            {
+
+                            }
+                        </td>
+                    </tr>
+                    stt++;
+                }
+            </tbody>
+        </table>
+    }
+
+    <div class="mt-3">
+        <a asp-action="Details"
+           asp-controller="Monhoc"
+           asp-route-id="@maMh"
+           asp-fragment="students"
+           class="btn btn-primary">
+            <i class="bi bi-arrow-left"></i> Quay lại
+        </a>
+    </div>
+</div>
+
+@* Modal nhập tỷ lệ điểm *@
+<div class="modal fade" id="tyLeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nhập tỷ lệ điểm — Lớp @maLop</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formTyLe">
+                    <input type="hidden" name="MaMh" value="@maMh" />
+                    <input type="hidden" name="MaLop" value="@maLop" />
+                    <input type="hidden" name="MaNh" value="@maNh" />
+                    <input type="hidden" name="MaHk" value="@maHk" />
+
+                    <div class="mb-3">
+                        <label class="form-label">Tỷ lệ Quá trình (%)</label>
+                        <input type="number"
+                               name="TyLeQT"
+                               min="0" max="100" step="1"
+                               class="form-control"
+                               value="@tyLeQt" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tỷ lệ Giữa kỳ (%)</label>
+                        <input type="number"
+                               name="TyLeGK"
+                               min="0" max="100" step="1"
+                               class="form-control"
+                               value="@tyLeGk" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tỷ lệ Cuối kỳ (%)</label>
+                        <input type="number"
+                               name="TyLeCK"
+                               min="0" max="100" step="1"
+                               class="form-control"
+                               value="@tyLeCk" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    Hủy
+                </button>
+                <button type="button"
+                        class="btn btn-primary"
+                        id="btnSaveTyLe">
+                    Lưu tỷ lệ
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@* Modal nhập điểm cho toàn bộ lớp *@
+<div class="modal fade" id="nhapDiemModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <!-- rộng hơn để chứa bảng -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nhập điểm — Lớp @maLop</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formNhapDiemModal">
+                    <input type="hidden" name="MaMh" value="@maMh" />
+                    <input type="hidden" name="MaLop" value="@maLop" />
+                    <input type="hidden" name="MaNh" value="@maNh" />
+                    <input type="hidden" name="MaHk" value="@maHk" />
+
+                    <table class="table table-bordered mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>STT</th>
+                                <th>Mã SV</th>
+                                <th>Họ tên</th>
+                                <th class="text-center">QT (@tyLeQt% )</th>
+                                <th class="text-center">GK (@tyLeGk% )</th>
+                                <th class="text-center">CK (@tyLeCk% )</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Count; i++)
+                            {
+                                var sv = Model[i];
+                                <tr>
+                                    <td>@(i + 1)</td>
+                                    <td>
+                                        @sv.MaSv
+                                        <input type="hidden"name="list[@i].MaKqht"value="@Model[i].MaKqht" />
+                                        <input type="hidden" name="list[@i].MaSv" value="@sv.MaSv" />
+                                        <input type="hidden" name="list[@i].MaMh" value="@maMh" />
+                                        <input type="hidden" name="list[@i].MaLop" value="@maLop" />
+                                        <input type="hidden" name="list[@i].MaNh" value="@maNh" />
+                                        <input type="hidden" name="list[@i].MaHk" value="@maHk" />
+                                        <input type="hidden" name="list[@i].TyLeQt" value="@tyLeQt" />
+                                        <input type="hidden" name="list[@i].TyLeGk" value="@tyLeGk" />
+                                        <input type="hidden" name="list[@i].TyLeCk" value="@tyLeCk" />
+                                    </td>
+                                    <td>@sv.HoTen</td>
+                                    <td>
+                                        <input type="number"
+                                               name="list[@i].DiemQt"
+                                               min="0" max="10" step="0.1"
+                                               class="form-control form-control-sm"
+                                               value="@sv.DiemQt" />
+                                    </td>
+                                    <td>
+                                        <input type="number"
+                                               name="list[@i].DiemGk"
+                                               min="0" max="10" step="0.1"
+                                               class="form-control form-control-sm"
+                                               value="@sv.DiemGk" />
+                                    </td>
+                                    <td>
+                                        <input type="number"
+                                               name="list[@i].DiemCk"
+                                               min="0" max="10" step="0.1"
+                                               class="form-control form-control-sm"
+                                               value="@sv.DiemCk" />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    Hủy
+                </button>
+                <button type="button"
+                        class="btn btn-primary"
+                        id="btnSaveDiemModal">
+                    Lưu điểm
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const postTyLeUrl = '@Url.Action("NhapTyLe", "Monhoc")';
+        const form = document.getElementById('formTyLe');
+        const elems = form.elements;
+
+        document.getElementById('btnSaveTyLe').addEventListener('click', () => {
+          const vm = {
+            MaMh:   elems['MaMh'].value,
+            MaLop:  elems['MaLop'].value,
+            MaNh:   elems['MaNh'].value,
+            MaHk:   elems['MaHk'].value,
+            TyLeQT: Number(elems['TyLeQT'].value),
+            TyLeGK: Number(elems['TyLeGK'].value),
+            TyLeCK: Number(elems['TyLeCK'].value),
+          };
+
+          fetch(postTyLeUrl, {
+            method: 'POST',
+            headers: { 'Content-Type':'application/json' },
+            body: JSON.stringify(vm)
+          })
+          .then(r => r.ok ? r.json() : Promise.reject(r.status))
+          .then(json => {
+            if (json.success) {
+              alert(json.message || 'Lưu thành công!');
+              bootstrap.Modal.getInstance(
+                document.getElementById('tyLeModal')
+              ).hide();
+              location.reload();
+            } else {
+              alert((json.errors||[json.message]).join('\n'));
+            }
+          })
+          .catch(err => {
+            console.error(err);
+            alert('Lỗi khi lưu tỷ lệ');
+          });
+        });
+
+             // Khi nhấn Lưu điểm trong modal
+        document.getElementById('btnSaveDiemModal')
+          .addEventListener('click', () => {
+            const form = document.getElementById('formNhapDiemModal');
+            const data = new FormData(form);
+
+            fetch('@Url.Action("SaveDiem", "Monhoc")', {
+              method: 'POST',
+              body: data
+            })
+            .then(r => r.ok ? r.json() : Promise.reject(r.status))
+            .then(json => {
+              if (json.success) {
+                alert(json.message);
+                bootstrap.Modal.getInstance(
+                  document.getElementById('nhapDiemModal')
+                ).hide();
+                location.reload();
+              } else {
+                alert((json.errors||[json.message]).join('\n'));
+              }
+            })
+            .catch(err => {
+              console.error(err);
+              alert('Lỗi khi lưu điểm');
+            });
+          });
+    </script>
+}
+

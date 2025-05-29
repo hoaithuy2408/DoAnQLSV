@@ -1,0 +1,67 @@
+﻿@model QLSV.Models.Xettotnghiep
+
+@{
+    ViewData["Title"] = "Xác nhận xóa xét tốt nghiệp";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-11 col-lg-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 text-white">XÁC NHẬN XÓA XÉT TỐT NGHIỆP</h5>
+                        <a asp-action="Index" class="btn btn-light btn-sm">
+                            <i class="bi bi-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+                    <div class="alert alert-warning" role="alert">
+                        <h5 class="alert-heading">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i> Cảnh báo
+                        </h5>
+                        <p>Bạn có chắc chắn muốn xóa cấu hình xét tốt nghiệp này? Thao tác không thể hoàn tác.</p>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered mb-0">
+                            <tbody>
+                                <tr>
+                                    <th class="bg-light">TC Tổng</th>
+                                    <td>@Model.SoTcTong</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">TC Tự chọn</th>
+                                    <td>@Model.SoTcTuChon</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">TC Bắt buộc</th>
+                                    <td>@Model.SoTcBatBuoc</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">GP Tối thiểu</th>
+                                    <td>@Model.GpatoiThieu</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">Chương trình đào tạo</th>
+                                    <td>@Model.MaCtdtNavigation?.TenCtdt</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <form asp-action="Delete" class="d-flex justify-content-end gap-2 mt-4">
+                        <input type="hidden" asp-for="MaCtdt" />
+                        <button type="submit" class="btn btn-danger px-4">
+                            <i class="bi bi-trash-fill me-1"></i> Xác nhận xóa
+                        </button>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

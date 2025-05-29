@@ -1,0 +1,83 @@
+﻿@model List<QLSV.Models.CtKhhtSv>
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    var namHocs = ViewBag.NamHocs as List<SelectListItem> ?? new List<SelectListItem>();
+    var hocKys = ViewBag.HocKys as List<SelectListItem> ?? new List<SelectListItem>();
+}
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-warning no-data-flag">
+        Không có môn học nào phù hợp
+    </div>
+}
+else
+{
+    <form id="registrationForm">
+        <table class="table table-bordered table-hover">
+            <thead class="table-primary">
+                <tr>
+                    <th>Mã học phần</th>
+                    <th>Tên học phần</th>
+                    <th>Số TC</th>
+                    <th>Loại MH</th>
+                    <th>Năm học</th>
+                    <th>Học kỳ</th>
+                    <th>Đăng ký</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    var item = Model[i];
+                    <tr>
+                        <td>@item.MaMh</td>
+                        <td>@item.MaMhNavigation.TenMh</td>
+                        <td>@item.MaMhNavigation.SoTc</td>
+                        <td>@((item.LoaiMh == true) ? "Bắt buộc" : "Tự chọn")</td>
+                        <td>
+                            <select name="courses[@i].MaNh" class="form-select">
+                                @Html.Raw(string.Join("",
+                                         (ViewBag.NamHocs as List<SelectListItem>).Select(nh =>
+                                         $"<option value='{nh.Value}' {(item.MaNh == nh.Value ? "selected" : "")}>{nh.Text}</option>"
+                                         )
+                                         ))
+                            </select>
+                        </td>
+                        <td>
+                            <select name="courses[@i].MaHk" class="form-select">
+                                @Html.Raw(string.Join("",
+                                         (ViewBag.HocKys as List<SelectListItem>).Select(hk =>
+                                         $"<option value='{hk.Value}' {(item.MaHk == hk.Value ? "selected" : "")}>{hk.Text}</option>"
+                                         )
+                                         ))
+                            </select>
+                        </td>
+                        <td>
+                            @if (ViewBag.DangKyMode)
+                            {
+                                <input type="checkbox"
+                                       name="courses[@i].Selected"
+                                       value="@($"{item.MaKhht}_{item.MaMh}")"
+                                @(item.XacNhanDk == true ? "checked" : "") />
+                            }
+                            else
+                            {
+                                <span class="badge @(item.XacNhanDk == true ? "bg-success" : "bg-secondary")">
+                                    @(item.XacNhanDk == true ? "Đã đăng ký" : "Chưa đăng ký")
+                                </span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @if (ViewBag.DangKyMode)
+        {
+            <div class="text-end mt-3">
+                <button type="submit" class="btn btn-primary">Xác nhận đăng ký</button>
+            </div>
+        }
+    </form>
+}

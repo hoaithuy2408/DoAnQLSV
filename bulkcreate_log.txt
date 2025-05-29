@@ -1,0 +1,16 @@
+=== DEBUG 4/2/2025 12:23:27 AM ===
+ModelState.IsValid: False
+Số môn học được chọn: 5
+Môn: MH01 | Loại: False | HK:  | NH: NH01
+Môn: MH02 | Loại: False | HK:  | NH: NH01
+Môn: MH03 | Loại: False | HK:  | NH: NH01
+Môn: MH04 | Loại: False | HK:  | NH: NH01
+Môn: MH05 | Loại: False | HK:  | NH: NH01
+=== DEBUG 4/2/2025 12:28:10 AM ===
+ModelState.IsValid: False
+Số môn học được chọn: 5
+Môn: MH01 | Loại: False | HK:  | NH: NH01
+Môn: MH02 | Loại: False | HK:  | NH: NH01
+Môn: MH03 | Loại: False | HK:  | NH: NH01
+Môn: MH04 | Loại: False | HK:  | NH: NH01
+Môn: MH05 | Loại: False | HK:  | NH: NH01

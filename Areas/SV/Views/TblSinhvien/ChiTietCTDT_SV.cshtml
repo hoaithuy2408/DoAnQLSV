@@ -1,0 +1,74 @@
+﻿@model List<QLSV.ViewModel.CTDTViewModel>
+@{
+    ViewData["Title"] = "Chi tiết Chương trình Đào tạo";
+    Layout = "~/Areas/SV/Views/Shared/_LayoutHeader.cshtml";
+}
+<div class="d-flex justify-content-start mb-4">
+    <a href="@Url.Action("ChiTietChuongTrinhDaoTao", "TblSinhVien")"
+       class="btn btn-primary me-2 active">
+        Chương trình đào tạo
+    </a>
+    <a href="@Url.Action("ChiTiet_KHHTSV", "TblSinhVien")"
+       class="btn btn-outline-primary">
+        Đăng ký kế hoạch học tập
+    </a>
+</div>
+
+
+<form method="get" class="mb-3">
+    <div class="row mb-2">
+        <div class="col-md-6 offset-md-3 d-flex align-items-center">
+            <label for="namHocSelect" class="col-form-label me-2 text-end" style="min-width: 80px;">Năm học:</label>
+            @Html.DropDownList("maNh", (List<SelectListItem>)ViewBag.NamHocs, "Tất cả năm học",
+                     new { @class = "form-select w-100", id = "namHocSelect" })
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-6 offset-md-3 d-flex align-items-center">
+            <label for="hocKySelect" class="col-form-label me-2 text-end" style="min-width: 80px;">Học kỳ:</label>
+            @Html.DropDownList("maHk", (List<SelectListItem>)ViewBag.HocKys, "Tất cả học kỳ",
+                     new { @class = "form-select w-100", id = "hocKySelect" })
+        </div>
+    </div>
+
+    <div class="mt-4 text-end">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-filter me-1"></i>Lọc
+        </button>
+    </div>
+</form>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-light">
+        <tr>
+            <th>STT</th>
+            <th>Mã môn</th>
+            <th>Tên môn học</th>
+            <th>Số tín chỉ</th>
+            <th>Loại môn</th>
+            <th>Năm học</th>
+            <th>Học kỳ</th>
+            <th>Điểm TB</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int stt = 1;
+        }
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@stt</td>
+                <td>@item.MaMh</td>
+                <td>@item.TenMh</td>
+                <td>@item.SoTc</td>
+                <td>@(item.LoaiMh ? "Bắt buộc" : "Tự chọn")</td>
+                <td>@item.TenNh</td>
+                <td>@item.TenHk</td>
+                <td>@(item.DiemTb.HasValue ? item.DiemTb.Value.ToString("0.00") : "-")</td>
+            </tr>
+            stt++;
+        }
+    </tbody>
+</table>

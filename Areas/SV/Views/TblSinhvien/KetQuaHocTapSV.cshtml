@@ -1,0 +1,115 @@
+﻿@model List<QLSV.ViewModel.KetQuaHocTapViewModel>
+
+@{
+    ViewData["Title"] = "Kết quả học tập";
+    // Kiểm tra có đang xuất PDF không
+    bool isExportPdf = ViewData["IsExportPdf"] != null && (bool)ViewData["IsExportPdf"];
+    Layout = isExportPdf ? null : "~/Areas/SV/Views/Shared/_LayoutHeader.cshtml";
+
+    // Gom nhóm dữ liệu theo năm học và học kỳ
+    var grouped = Model
+        .OrderBy(x => x.TenNh)
+        .ThenBy(x => x.HocKy)
+        .GroupBy(x => new { x.TenNh, x.HocKy });
+}
+
+@if (!isExportPdf)
+{
+    <div class="mb-3">
+        <a class="btn btn-outline-primary"
+           href="@Url.Action("XuatKetQuaHocTapSVPdf", "TblSinhvien")">
+            <i class="bi bi-file-earmark-pdf"></i> Tải về PDF
+        </a>
+    </div>
+}
+else
+{
+}
+
+
+@foreach (var grp in grouped)
+{
+    var list = grp.ToList();
+    var totalTcAll = list.Sum(x => x.SoTc);
+    var done = list.Where(x => x.DiemQt.HasValue && x.DiemGk.HasValue && x.DiemCk.HasValue);
+    var totalTcDone = done.Sum(x => x.SoTc);
+    var weightedSum = done.Sum(x => x.DiemTb * x.SoTc);
+    double? avgHk = totalTcDone > 0 ? weightedSum / totalTcDone : (double?)null;
+
+    <h5 class="@(isExportPdf ? "" : "bg-primary text-white p-2 rounded mt-4")">
+        Năm học: @grp.Key.TenNh — Học kỳ: @grp.Key.HocKy
+    </h5>
+
+    <div class="table-responsive mb-4">
+        <table class="table table-bordered table-striped text-center">
+            <thead class="@(isExportPdf ? "" : "table-light")">
+                <tr>
+                    <th style="width:5%">STT</th>
+                    <th style="width:10%">Mã HP</th>
+                    <th style="width:33%">Tên học phần</th>
+                    <th style="width:8%">TC</th>
+                    <th style="width:8%">QT</th>
+                    <th style="width:8%">GK</th>
+                    <th style="width:8%">CK</th>
+                    <th style="width:8%">TB</th>
+                    <th style="width:12%">Kết quả</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int stt = 1;
+                }
+                @foreach (var x in list.OrderBy(x => x.MaMh))
+                {
+                    <tr>
+                        <td>@stt</td>
+                        <td>@x.MaMh</td>
+                        <td class="text-start">@x.TenMh</td>
+                        <td>@x.SoTc</td>
+                        <td>@(x.DiemQt?.ToString("0.##") ?? "-")</td>
+                        <td>@(x.DiemGk?.ToString("0.##") ?? "-")</td>
+                        <td>@(x.DiemCk?.ToString("0.##") ?? "-")</td>
+                        <td>
+                            @if (x.DiemQt.HasValue && x.DiemGk.HasValue && x.DiemCk.HasValue)
+                            {
+                                @x.DiemTb.ToString("0.0")
+                            }
+                            else
+                            {
+                                <span class="text-muted">-</span>
+                            }
+                        </td>
+                        <td>
+                            @if (x.DiemQt.HasValue && x.DiemGk.HasValue && x.DiemCk.HasValue)
+                            {
+                                var passed = x.DiemTb >= 5.0;
+                                <span class="@(passed ? "text-success" : "text-danger")">
+                                    @(passed ? "Đạt" : "Không đạt")
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">-</span>
+                            }
+                        </td>
+                    </tr>
+                    stt++;
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mb-5 ps-3">
+        <strong>Tổng TC đăng ký:</strong> @totalTcAll
+        &nbsp;|&nbsp;
+        <strong>ĐTB học kỳ:</strong>
+        @if (avgHk.HasValue)
+        {
+            @avgHk.Value.ToString("0.00")
+        }
+        else
+        {
+            <span class="text-muted">-</span>
+        }
+    </div>
+}

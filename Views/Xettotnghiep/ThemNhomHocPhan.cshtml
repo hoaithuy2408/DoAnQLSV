@@ -1,0 +1,67 @@
+﻿@model QLSV.ViewModels.AddNhomHocPhanViewModel
+
+@{
+    ViewData["Title"] = "Thêm nhóm học phần";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 text-white">THÊM NHÓM HỌC PHẦN</h5>
+                       <div class="mb-4">
+                          
+                            <a asp-action="Index" class="btn btn-light btn-sm">
+                                <i class="bi bi-arrow-left"></i> Quay lại
+                            </a>
+                       </div>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <h6 class="mb-4">Chương trình đào tạo: <strong>@Model.MaCtdt</strong></h6>
+
+                    <form asp-action="ThemNhomHocPhan" method="post">
+                        @Html.AntiForgeryToken()
+                        <input asp-for="MaCtdt" type="hidden" />
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="MaNhomHp" class="form-label fw-medium">Nhóm học phần</label>
+                            <select asp-for="MaNhomHp" class="form-select" asp-items="Model.NhomHpList">
+                                <option value="">-- Chọn nhóm học phần --</option>
+                            </select>
+                            <span asp-validation-for="MaNhomHp" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SoTcTuChon" class="form-label fw-medium">Tín chỉ tự chọn yêu cầu</label>
+                            <input asp-for="SoTcTuChon" class="form-control" />
+                            <span asp-validation-for="SoTcTuChon" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="SoTcBatBuoc" class="form-label fw-medium">Tín chỉ bắt buộc yêu cầu</label>
+                            <input asp-for="SoTcBatBuoc" class="form-control" />
+                            <span asp-validation-for="SoTcBatBuoc" class="text-danger small"></span>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save-fill me-1"></i> Thêm nhóm
+                            </button>
+                        </div>
+                    </form>
+               
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

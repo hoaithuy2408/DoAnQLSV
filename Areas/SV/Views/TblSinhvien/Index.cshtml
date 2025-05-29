@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "Trang sinh viên";
+    Layout = "~/Areas/SV/Views/Shared/_LayoutHeader.cshtml";
+}
+
+
+    <!-- Main grid -->
+        <div class="row g-3">
+            <!-- Repeat this block for each module -->
+            <div class="col-6 col-sm-4 col-md-3">
+                <a href="/SV/TblSinhvien/ThongTinSV" class="text-decoration-none text-dark">
+                    <div class="module-box">
+                        <img src="~/assetsSV/images/id-card.png" alt="icon">
+                        <p class="mt-2">Thông tin sinh viên</p>
+                    </div>
+                </a>               
+            </div>
+             <div class="col-6 col-sm-4 col-md-3">
+                <a href="/SV/TblSinhvien/ChiTiet_KHHTSV" class="text-decoration-none text-dark">
+                <div class="module-box">
+                    <img src="~/assetsSV/images/schedule.png" alt="icon">
+                    <p class="mt-2">Kế hoạch học tập</p>
+                </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-3" style="padding-top: 10px;">           
+            <div class="col-6 col-sm-4 col-md-3">
+            <a href="/SV/TblSinhvien/KetQuaHocTapSV" class="text-decoration-none text-dark">
+                <div class="module-box">
+                <img src="~/assetsSV/images/clipboard.png" alt="icon">
+                    <p class="mt-2">Kết quả học tập</p>
+                </div>
+                </a>
+            </div>
+        <div class="col-6 col-sm-4 col-md-3">
+            <a href="/SV/TblSinhvien/XetTotnghiepSV" class="text-decoration-none text-dark" >
+                <div class="module-box">
+                    <img src="~/assetsSV/images/graduate.png" alt="icon">
+                    <p class="mt-2">Xét tốt nghiệp</p>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+    

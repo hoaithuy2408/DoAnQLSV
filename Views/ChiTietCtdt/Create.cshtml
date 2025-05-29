@@ -1,0 +1,142 @@
+﻿@model QLSV.Models.CtCtdt
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_layoutAdmin.cshtml";
+}
+
+<style>
+    .container-custom {
+        background: #d0e1e7;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        color: #0c2a53;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    h1 {
+        font-size: 24px;
+        font-weight: bold;
+        color: #0b2343;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        font-weight: bold;
+        color: #0b2343;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #fff;
+        border-radius: 5px;
+    }
+
+    .text-danger {
+        font-size: 14px;
+    }
+
+    .btn-submit {
+        background: #193b6a;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+        .btn-submit:hover {
+            background: #0e213a;
+        }
+
+    .btn-back {
+        background: #193b6a;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+        .btn-back:hover {
+            background: #0e213a;
+            color: white;
+        }
+
+</style>
+
+
+<div class="container w-100 d-flex justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
+        <div class="container-custom">
+            <div class="section-header">
+                <h1>Thêm Chi Tiết CTĐT</h1>
+            </div>
+            <form  asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                
+                <!-- Nút quay lại -->
+                <div class="d-flex justify-content-end">
+                    <a asp-action="Index" class="btn btn-back">
+                        <i></i>Quay lại
+                    </a>
+                </div>
+
+                <!-- Mã CTĐT -->
+                <div class="form-group">
+                    <label asp-for="MaCtdt" class="control-label">Chương trình đào tạo</label>
+                    <select asp-for="MaCtdt" class="form-control" asp-items="ViewBag.MaCtdt"></select>
+                </div>
+
+                <!-- Mã năm học -->
+                <div class="form-group">
+                    <label asp-for="MaNh" class="control-label">Năm học</label>
+                    <select asp-for="MaNh" class="form-control" asp-items="ViewBag.MaNh"></select>
+                </div>
+
+                <!-- Mã học kỳ -->
+                <div class="form-group">
+                    <label asp-for="MaHk" class="control-label">Học kỳ</label>
+                    <select asp-for="MaHk" class="form-control" asp-items="ViewBag.MaHk"></select>
+                </div>
+
+                <!-- Mã môn học -->
+                <div class="form-group">
+                    <label asp-for="MaMh" class="control-label">Môn học</label>
+                    <select asp-for="MaMh" class="form-control" asp-items="ViewBag.MaMh"></select>
+                </div>
+
+                <!-- Loại môn học -->
+                <div class="form-group">
+                    <label asp-for="LoaiMh" class="control-label">Loại môn học</label>
+                    <select asp-for="LoaiMh" class="form-control">
+                        <option value="true">Bắt buộc</option>
+                        <option value="false">Tự chọn</option>
+                    </select>
+                </div>
+
+                <!-- Nút submit -->
+                <div class="form-group">
+                    <input type="submit" value="Thêm mới" class="btn-submit" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

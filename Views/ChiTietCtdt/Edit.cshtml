@@ -1,0 +1,137 @@
+﻿@model QLSV.Models.CtCtdt
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_layoutAdmin.cshtml";
+}
+
+<style>
+    .container-custom {
+        background: #d0e1e7;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        color: #0c2a53;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    h1 {
+        font-size: 26px;
+        font-weight: bold;
+        color: #0b2343;
+        text-transform: uppercase;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        font-weight: bold;
+        color: #0b2343;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc; /* Thay đổi viền để form trông rõ ràng hơn */
+        border-radius: 5px;
+        background: white;
+    }
+
+    .text-danger {
+        font-size: 14px;
+    }
+
+    .btn-submit {
+        background: #193b6a;
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+        font-weight: bold;
+        transition: background 0.3s ease-in-out;
+    }
+
+        .btn-submit:hover {
+            background: #0e213a;
+            color: white;
+        }
+
+    .btn-back {
+        background: #193b6a;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s ease-in-out;
+    }
+
+        .btn-back:hover {
+            background: #0e213a;
+            color: white;
+        }
+
+</style>
+<div class ="container w-100 d-flex justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
+        <div class="container-custom">
+            <div class="section-header">
+                <h1>Chỉnh sửa chi tiết CTĐT</h1>
+            </div>
+            <form asp-action="Edit">
+                <div class="d-flex justify-content-end">
+                    <a asp-controller="Ctdt" asp-action="Details" asp-route-id="@Model.MaCtdt" asp-route-tab="chitiet-content" class="btn btn-back">
+                        <i></i> Quay lại
+                    </a>
+
+                </div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="MaCtdt" />
+                <div class="form-group">
+                    <label class="control-label">Tên Chương Trình Đào Tạo</label>
+                    <input asp-for="MaCtdt" class="form-control" readonly />
+
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Tên Môn Học</label>
+                    <input type="text" class="form-control" value="@ViewBag.TenMh" readonly />
+                </div>
+
+
+            <div class="form-group">
+                <label asp-for="MaNh" class="control-label">Năm học</label>
+                <select asp-for="MaNh" class="form-control" asp-items="ViewBag.MaNh"></select>
+                <span asp-validation-for="MaNh" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaHk" class="control-label">Học kỳ </label>
+                <select asp-for="MaHk" class="form-control" asp-items="ViewBag.MaHk"></select>
+                <span asp-validation-for="MaHk" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="MaMh" />
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="LoaiMh" /> Bắt buộc
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Lưu thay đổi" class="btn btn-submit" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

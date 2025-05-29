@@ -1,0 +1,177 @@
+﻿@model QLSV.Models.Sinhvien
+@{
+    ViewData["Title"] = "Thông tin sinh viên";
+    Layout = "~/Areas/SV/Views/Shared/_LayoutHeader.cshtml";
+}
+
+<div class="container py-3">
+    <div class="card shadow-sm rounded-3 overflow-hidden">
+        <!-- Profile Header -->
+        <div class="profile-header text-white p-3 d-flex flex-column flex-md-row align-items-center">
+            <div class="me-md-3 mb-2 mb-md-0">
+                @if (!string.IsNullOrEmpty(Model.Anh))
+                {
+                    <img src="@Url.Content(Model.Anh)" alt="Ảnh sinh viên"
+                         class="rounded-circle border border-3 border-white"
+                         style="width:80px;height:80px;object-fit:cover;" />
+                }
+                else
+                {
+                    <div class="rounded-circle bg-white text-primary d-flex align-items-center justify-content-center"
+                         style="width:80px;height:80px;">
+                        <i class="fas fa-user fa-2x"></i>
+                    </div>
+                }
+            </div>
+            <div class="flex-fill text-center text-md-start">
+                <h2 class="h5 fw-bold mb-1">@Model.HoTen</h2>
+                <div class="d-flex flex-wrap justify-content-center justify-content-md-start gap-1">
+                    <span class="badge bg-white text-primary px-2 py-1 rounded-pill">
+                        <i class="fas fa-id-badge me-1"></i>@Model.MaSv
+                    </span>
+                    <span class="badge bg-white text-primary px-2 py-1 rounded-pill">
+                        <i class="fas fa-layer-group me-1"></i>@Model.MaLopNavigation?.TenLop
+                    </span>
+                    <span class="badge bg-white text-primary px-2 py-1 rounded-pill">
+                        <i class="fas fa-book-reader me-1"></i>@Model.MaNganhNavigation?.TenNganh
+                    </span>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- Profile Content -->
+        <div class="card-body p-2">
+            <div class="row g-0">
+                <!-- Personal Information -->
+                <div class="col-md-6 p-3 border-end">
+                    <div class="section-header d-flex align-items-center mb-3">
+                        <div class="icon-circle  me-2">
+                            <i class="bi bi-info-circle"></i>
+                        </div>
+                        <h6 class="mb-0">Thông tin cá nhân</h6>
+                    </div>
+                    <div class="info-item row mb-2">
+                        <div class="col-sm-4 text-muted small">Mã SV</div>
+                        <div class="col-sm-8 fw-medium small">@Model.MaSv</div>
+                    </div>
+                    <div class="info-item row mb-2">
+                        <div class="col-sm-4 text-muted small">Họ tên</div>
+                        <div class="col-sm-8 fw-medium small">@Model.HoTen</div>
+                    </div>
+                    <div class="info-item row mb-2">
+                        <div class="col-sm-4 text-muted small">Ngày sinh</div>
+                        <div class="col-sm-8 fw-medium small">@Model.NgaySinh.ToString("dd/MM/yyyy")</div>
+                    </div>
+                    <div class="info-item row mb-2">
+                        <div class="col-sm-4 text-muted small">Giới tính</div>
+                        <div class="col-sm-8 fw-medium small">@(Model.GioiTinh ? "Nam" : "Nữ")</div>
+                    </div>
+                    <div class="info-item row mb-2">
+                        <div class="col-sm-4 text-muted small">Dân tộc</div>
+                        <div class="col-sm-8 fw-medium small">@Model.DanToc</div>
+                    </div>
+                    <div class="info-item row">
+                        <div class="col-sm-4 text-muted small">CCCD</div>
+                        <div class="col-sm-8 fw-medium small">@Model.Cccd</div>
+                    </div>
+                </div>
+
+                <!-- Academic Information -->
+                <div class="col-md-6 p-3">
+                    <div class="section-header d-flex align-items-center mb-3">
+                        <div class="icon-circle me-2">
+                            <i class="bi bi-mortarboard"></i>
+                        </div>
+                        <h6 class="mb-0">Thông tin học vụ</h6>
+                    </div>
+                    <div class="info-item row mb-2">
+                        <div class="col-sm-4 text-muted small">Khoa</div>
+                        <div class="col-sm-8 fw-medium small">@Model.MaKhoaNavigation?.TenKhoa</div>
+                    </div>
+                    <div class="info-item row mb-2">
+                        <div class="col-sm-4 text-muted small">Ngành</div>
+                        <div class="col-sm-8 fw-medium small">@Model.MaNganhNavigation?.TenNganh</div>
+                    </div>
+                    <div class="info-item row mb-2">
+                        <div class="col-sm-4 text-muted small">CTĐT</div>
+                        <div class="col-sm-8 fw-medium small">@Model.MaCtdtNavigation?.TenCtdt</div>
+                    </div>
+                    <div class="info-item row mb-2">
+                        <div class="col-sm-4 text-muted small">Lớp</div>
+                        <div class="col-sm-8 fw-medium small">@Model.MaLopNavigation?.TenLop</div>
+                    </div>
+                    <div class="info-item row">
+                        <div class="col-sm-4 text-muted small">Niên khóa</div>
+                        <div class="col-sm-8 fw-medium small">@Model.MaNkNavigation?.TenNk</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="bg-light p-3 border-top">
+                <div class="section-header d-flex align-items-center mb-3">
+                    <div class="icon-circle  me-2">
+                        <i class="bi bi-person-lines-fill"></i>
+                    </div>
+                    <h6 class="mb-0">Thông tin liên hệ</h6>
+                </div>
+                <div class="info-item row mb-2">
+                    <div class="col-sm-4 text-muted small">SĐT</div>
+                    <div class="col-sm-8 fw-medium small">@Model.Sdt</div>
+                </div>
+                <div class="info-item row mb-2">
+                    <div class="col-sm-4 text-muted small">Email</div>
+                    <div class="col-sm-8 fw-medium small">@Model.Email</div>
+                </div>
+                <div class="info-item row mb-2">
+                    <div class="col-sm-4 text-muted small">Tên đăng nhập</div>
+                    <div class="col-sm-8 fw-medium small">@Model.TenDn</div>
+                </div>
+                <div class="info-item row mb-2">
+                    <div class="col-sm-4 text-muted small">Địa chỉ</div>
+                    <div class="col-sm-8 fw-medium small">@Model.DiaChi</div>
+                </div>
+                <div class="info-item row">
+                    <div class="col-sm-4 text-muted small">Quê quán</div>
+                    <div class="col-sm-8 fw-medium small">@Model.QueQuan</div>
+                </div>
+            </div>
+        </div>
+
+       
+    </div>
+</div>
+
+<style>
+    .profile-header {
+        background: linear-gradient(135deg, #3f51b5, #2196f3);
+    }
+
+    .icon-circle {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .info-item {
+        padding: 0.25rem 0;
+    }
+
+    .section-header h6 {
+        font-size: .9rem;
+        margin: 0;
+    }
+
+    .section-title {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .card {
+        border: none;
+    }
+</style>

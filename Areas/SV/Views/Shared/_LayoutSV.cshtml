@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- basic -->
+    <!-- Thêm viewport meta tag chính xác -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- mobile metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <!-- site metas -->
+    <title>Thông tin sinh viên</title>
+    <link rel="shortcut icon" type="image/png" href="~/assetsSV/images/Logo_NTU.png" />
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- bootstrap css -->
+    <link rel="stylesheet" href="~/assetsSV/css/bootstrap.min.css">
+    <!-- style css -->
+    <link rel="stylesheet" href="~/assetsSV/css/style.css">
+    <!-- Responsive-->
+    <link rel="stylesheet" href="~/assetsSV/css/responsive.css">
+    <!-- fevicon -->
+    <link rel="icon" href="~/assetsSV/images/fevicon.png" type="image/gif" />
+    <!-- Tweaks for older IEs-->
+    <!-- Thêm Font Awesome từ CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+   
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet">
+
+</head>
+<!-- body -->
+<body class="main-layout">
+    <header class="w-120 header">
+        <div class="container-fluid">
+            <div class="row d_flex align-items-center justify-content-between">
+
+                <!-- Logo bên trái -->
+                <div class="col-md-4 col-sm-4 logo_section">
+                    <div class="full">
+                        <div class="center-desk">
+                            <div class="logo d-flex align-items-center">
+                                <a class="sidebar-link d-flex align-items-center"asp-action="Index" asp-controller="Home">
+                                    <img src="~/assetsSV/images/Logo1.png"alt="Logo"style="height: 80px; width: auto; margin-bottom: 10px;" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dropdown -->
+                <div class="col-auto text-end order-md-last">
+                    <ul class="d-flex justify-content-end gap-3 align-items-center list-unstyled mb-0">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle p-0"href="#"id="userDropdown"role="button"data-bs-toggle="dropdown"aria-expanded="false">
+                                <i class="fa fa-user text-dark"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end"
+                                aria-labelledby="userDropdown">
+                                <li>
+                                    <a class="dropdown-item"
+                                       asp-area="SV"
+                                       asp-controller="TblSinhVien"
+                                       asp-action="Index">
+                                        Sinh viên
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                       asp-area=""
+                                       asp-controller="Khoa"
+                                       asp-action="Index">
+                                        Giảng viên
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </header>
+    <!-- end header inner -->
+    <!-- end header -->
+    @RenderBody()
+
+    <!--  footer -->
+    <footer class="bg-light text-dark pt-5">
+        <div class="container">
+            <div class="row gy-5">
+
+                <!-- Giới thiệu -->
+                <div class="col-md-6">
+                    <h4 class="fw-bold mb-3">TRƯỜNG ĐẠI HỌC NHA TRANG</h4>
+                    <p class="small text-muted mb-4">
+                        Trải qua 65 năm xây dựng và phát triển, Trường Đại học Nha Trang đã trở thành cơ sở đào tạo đa ngành, quy mô lớn;
+                        là trung tâm nghiên cứu ứng dụng công nghệ tiên tiến, đặc biệt trong lĩnh vực thủy sản phục vụ phát triển kinh tế – xã hội khu vực Nam Trung Bộ, Tây Nguyên và cả nước.
+                    </p>
+                    <div class="d-flex" style="gap: 10px;">
+                        <a href="https://www.facebook.com/NTUedu.Fanpage" class="text-dark fs-5"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-dark fs-5"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-dark fs-5"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="text-dark fs-5"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                <!-- Liên hệ -->
+                <div class="col-md-6">
+                    <h5 class="fw-semibold mb-3">LIÊN HỆ VỚI CHÚNG TÔI</h5>
+                    <ul class="row list-unstyled">
+                        <li class="col-12 mb-3 d-flex">
+                            <i class="fas fa-map-marker-alt me-3 text-primary " style="gap: 5px;"></i>
+                            <span class="small">02 Nguyễn Đình Chiểu, Phường Vĩnh Thọ, Nha Trang, Khánh Hòa</span>
+                        </li>
+                        <li class="col-6 mb-2 d-flex align-items-center" style="gap: 5px;">
+                            <i class="fas fa-phone-alt me-3 text-primary"></i>
+                            <a href="tel:02583831147" class="small text-decoration-none text-dark">0258 383 1147</a>
+                        </li>
+                        <li class="col-6 mb-2 d-flex align-items-center" style="gap: 5px;">
+                            <i class="fas fa-phone me-3 text-primary"></i>
+                            <a href="tel:02583831149" class="small text-decoration-none text-dark">0258 383 1149</a>
+                        </li>
+                        <li class="col-6 mb-2 d-flex align-items-center" style="gap: 5px;">
+                            <i class="fas fa-envelope me-3 text-primary"></i>
+                            <a href="mailto:dhnt@ntu.edu.vn" class="small text-decoration-none text-dark">dhnt@ntu.edu.vn</a>
+                        </li>
+                        <li class="col-6 mb-2 d-flex align-items-center" style="gap: 5px;">
+                            <i class="fas fa-globe me-3 text-primary"></i>
+                            <a href="https://www.ntu.edu.vn" target="_blank" class="small text-decoration-none text-dark">ntu.edu.vn</a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <hr class="my-4">
+
+            <div class="text-center pb-3" >
+                <small class="text-muted">© 2025 All Rights Reserved. Design by Phạm Thị Hoài Thuy</small>
+            </div>
+        </div>
+    </footer>
+    <!-- end footer -->
+    <!-- Javascript files-->
+    <script src="~/assetsSV/js/jquery.min.js"></script>
+    <script src="~/assetsSV/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/assetsSV/js/custom.js"></script>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+</body>
+</html>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        font-family: 'Merriweather', serif;
+    }
+
+    .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 100px;
+        z-index: 999;
+        background-color: #fff;
+    }
+
+    .full_bg {
+        width: 100vw;
+        padding-top: 100px; /* bằng chiều cao của header */
+        margin: 0;
+        padding: 0;
+    }
+
+        .full_bg img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+    .infoma {
+        text-align: left;
+    }
+ 
+</style>

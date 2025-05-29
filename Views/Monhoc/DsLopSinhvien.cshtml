@@ -1,0 +1,63 @@
+﻿@model List<QLSV.ViewModel.LopViewModel>
+
+<div class="card" style="padding: 15px">
+    <div class="card-header bg-white">
+        <h4>Các lớp đã đăng ký</h4>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-striped mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>STT</th>
+                        <th>Mã lớp</th>
+                        <th>Tên lớp</th>
+                        <th>Năm học</th>
+                        <th>Học kỳ</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int stt = 1;
+                        if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    Chưa có lớp nào đăng ký môn này.
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var cls in Model)
+                            {
+                                <tr>
+                                    <td>@stt</td>
+                                    <td>@cls.MaLop</td>
+                                    <td>@cls.TenLop</td>
+                                    <td>@cls.NamHoc</td>
+                                    <td>@cls.HocKy</td>
+                                    <td>
+                                        <a asp-action="DsSinhvien"
+                                           asp-controller="Monhoc"
+                                           asp-route-maMh="@ViewBag.MaMh"
+                                           asp-route-maNh="@cls.MaNh"
+                                           asp-route-maHk="@cls.HocKy"
+                                           asp-route-maLop="@cls.MaLop"
+                                           class="btn btn-sm btn-primary">
+                                            Xem sinh viên
+                                        </a>
+                                    </td>
+                                </tr>
+                                stt++;
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+

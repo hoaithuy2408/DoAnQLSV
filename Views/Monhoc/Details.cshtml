@@ -1,0 +1,191 @@
+﻿@model QLSV.Models.Monhoc
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_layoutAdmin.cshtml";
+}
+
+<style>
+    .container-custom {
+        background: #d1e0eb;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        color: #0c2a53;
+        max-width: 90%;
+        margin: auto;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    h1 {
+        font-size: 24px;
+        font-weight: bold;
+        color: #0b2343;
+    }
+
+    .details-content dl {
+        background: white;
+        padding: 15px;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    dt {
+        font-weight: bold;
+        color: #193b6a;
+    }
+
+</style>
+
+<div class="container-custom">
+    <div class="section-header">
+        <h1>Thông tin Môn Học
+            <a asp-action="Index" class="btn btn-light btn-sm float-end">
+                <i class="bi bi-arrow-left"></i> Quay lại
+            </a>
+        </h1>
+    </div>
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" id="monhocTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info"
+                    type="button" role="tab">
+                Thông tin môn học
+            </button>
+        </li>
+        @if (User.IsInRole("Sua"))
+         {
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="students-tab" data-bs-toggle="tab" data-bs-target="#students"
+                        type="button" role="tab">
+                    Nhập điểm
+                </button>
+            </li>
+         }
+    </ul>
+
+    <div class="tab-content mt-3" style="padding: 5px">
+        <!-- Tab Info -->
+        <div class="tab-pane fade show active" id="info" role="tabpanel">
+            <div class="details-content">
+                <dl class="row">
+                    <dt class="col-sm-3">Mã Môn Học:</dt>
+                    <dd class="col-sm-9">@Model.MaMh</dd>
+
+                    <dt class="col-sm-3">Tên Môn Học:</dt>
+                    <dd class="col-sm-9">@Model.TenMh</dd>
+
+                    <dt class="col-sm-3">Số Tín Chỉ:</dt>
+                    <dd class="col-sm-9">@Model.SoTc</dd>
+
+                    <dt class="col-sm-3">Bộ Môn:</dt>
+                    <dd class="col-sm-9">@Model.MaBmNavigation?.TenBm</dd>
+                </dl>
+
+                <div class="d-flex justify-content-between mt-3">
+                    <div>
+                        <a asp-action="Edit" asp-route-id="@Model?.MaMh" class="btn btn-primary">
+                            <i class="bi bi-pencil-fill me-1"></i> Chỉnh sửa
+                        </a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Students -->
+        <div class="tab-pane fade" id="students" role="tabpanel">
+            <div id="studentsList" class="table-responsive p-2" data-loaded="false">
+                <div class="text-center text-muted">Đang tải danh sách lớp…</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var studentsTab   = document.getElementById('students-tab');
+            var listContainer = document.getElementById('studentsList');
+
+        function attachTyLeHandlers() {
+          var modalEl = document.getElementById('tyLeModal');
+          if (!modalEl) return;
+          var modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+          // Open modal: load giá trị hiện tại từ server
+          document.getElementById('btnOpenTyLe').addEventListener('click', function(e) {
+            e.preventDefault();
+
+            var maMh = document.getElementById('vmMaMh').value;
+            var maNh = document.getElementById('vmMaNh').value;
+            var maHk = document.getElementById('vmMaHk').value;
+
+            fetch(`@Url.Action("GetTyLe", "Monhoc")?maMh=${maMh}&maNh=${maNh}&maHk=${maHk}`)
+              .then(r => r.json())
+              .then(data => {
+                if (data.success) {
+                  document.getElementById('vmTyLeQt').value = data.TyLeQt;
+                  document.getElementById('vmTyLeGk').value = data.TyLeGk;
+                  document.getElementById('vmTyLeCk').value = data.TyLeCk;
+                }
+                document.getElementById('tyLeErrors').textContent = '';
+                modalInstance.show();
+              })
+              .catch(() => {
+                // nếu lỗi, vẫn show modal với giá trị mặc định
+                document.getElementById('tyLeErrors').textContent = 'Không lấy được dữ liệu đã lưu.';
+                modalInstance.show();
+              });
+          });
+
+          // Save handler: chỉ hide modal, không reset
+          document.getElementById('btnSaveTyLe').addEventListener('click', function(e) {
+            e.preventDefault();
+            var vm = {
+              MaMh:   document.getElementById('vmMaMh').value,
+              MaNh:   document.getElementById('vmMaNh').value,
+              MaHk:   document.getElementById('vmMaHk').value,
+              TyLeQt: parseFloat(document.getElementById('vmTyLeQt').value),
+              TyLeGk: parseFloat(document.getElementById('vmTyLeGk').value),
+              TyLeCk: parseFloat(document.getElementById('vmTyLeCk').value)
+            };
+
+            fetch('@Url.Action("NhapTyLe", "Monhoc")', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(vm)
+            })
+            .then(r => r.json())
+            .then(res => {
+              if (res.success) {
+                modalInstance.hide();
+              } else {
+                document.getElementById('tyLeErrors').textContent = 'Lưu thất bại: ' + res.errors.join(', ');
+              }
+            })
+            .catch(() => {
+              document.getElementById('tyLeErrors').textContent = 'Có lỗi khi lưu, thử lại.';
+            });
+          });
+        }
+
+            studentsTab.addEventListener('shown.bs.tab', function() {
+                if (listContainer.dataset.loaded === 'true') return;
+
+                fetch('@Url.Action("DsLopSinhvien", "Monhoc", new { maMh = Model.MaMh })')
+                    .then(r => r.text())
+                    .then(html => {
+                        listContainer.innerHTML = html;
+                        listContainer.dataset.loaded = 'true';
+                        attachTyLeHandlers();
+                    });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,145 @@
+﻿@model QLSV.Models.CtCtdt
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_layoutAdmin.cshtml";
+}
+
+<style>
+    .container-custom {
+        background: #d0e1e7;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        color: #0c2a53;
+        max-width: 600px;
+        margin: auto;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+
+    .details-content dl {
+        background: white;
+        padding: 15px;
+        border-radius: 5px;
+    }
+
+    dt {
+        font-weight: bold;
+        color: #721c24;
+    }
+
+    .btn-danger {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+    .btn-secondary {
+        background: #193b6a;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+        .btn-secondary:hover {
+            background: #0e213a;
+            color: white;
+        }
+
+</style>
+<div class="container-custom">
+    <div class="section-header">
+        <h3 style="color: #0b2343;">Bạn có chắc muốn xóa?</h3>
+    </div>
+
+    <div class="details-content">
+        <dl class="row">
+            <dt class="col-sm-3">
+                <strong>Mã CTĐT:</strong>
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.MaCtdtNavigation.MaCtdt)
+            </dd>
+            <dt class="col-sm-3">
+                <strong>Môn hoc:</strong>
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.MaMhNavigation.TenMh)
+            </dd>
+            <dt class="col-sm-3">
+                <strong>Loại MH:</strong>
+            </dt>
+            <dd class="col-sm-9">
+                @(Model.LoaiMh ? "Bắt buộc" : "Tự chọn")
+            </dd>
+            <dt class="col-sm-3">
+                <strong>Mã HK:</strong>
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.MaHkNavigation.MaHk)
+            </dd>
+            <dt class="col-sm-3">
+                <strong>Mã NH:</strong>
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.MaMhNavigation.MaMh)
+            </dd>
+           
+        </dl>
+    </div>
+
+    <form asp-action="Delete" class="d-flex justify-content-between mt-3">
+        <input type="hidden" asp-for="MaCtdt" />
+        <input type="hidden" asp-for="MaMh" />
+
+        <button type="submit" class="btn btn-danger">
+            <i class="fas fa-trash-alt"></i> Xóa
+        </button>
+
+        <a id="backToList" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+    </form>
+</div>
+
+<script>
+        document.addEventListener("DOMContentLoaded", function () {
+        // Lấy tab hiện tại từ localStorage
+        let activeTab = localStorage.getItem("activeTab") || "#general";
+
+        // Nếu tab đã lưu là "Chi tiết CTĐT", cập nhật link Back to List
+    let backToList = document.getElementById("backToList");
+        if (backToList) {
+            backToList.setAttribute("href", `/Ctdt/Details/${encodeURIComponent("@Model.MaCtdt")}?activeTab=${encodeURIComponent(activeTab)}`);
+        }
+        // Sự kiện khi chuyển tab để lưu vào localStorage
+        document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
+            tab.addEventListener("shown.bs.tab", function (event) {
+                localStorage.setItem("activeTab", event.target.getAttribute("data-bs-target"));
+            });
+        });
+
+        // Kích hoạt lại tab đã lưu
+        let tabToActivate = document.querySelector(`[data-bs-target='${activeTab}']`);
+        if (tabToActivate) {
+            new bootstrap.Tab(tabToActivate).show();
+        }
+    });
+
+</script>

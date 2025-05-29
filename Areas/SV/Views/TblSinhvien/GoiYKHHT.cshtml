@@ -1,0 +1,132 @@
+﻿@model QLSV.ViewModel.GoiYKHHT
+@{
+    ViewData["Title"] = "Gợi ý KHHT";
+    Layout = "~/Areas/SV/Views/Shared/_LayoutHeader.cshtml";
+}
+
+<div class="container py-2">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">@ViewData["Title"]</h5>
+        </div>
+        <div class="card-body">
+           
+
+            <!-- 1. Môn trong kỳ hiện tại chưa đăng ký -->
+            <h6>1. Môn trong kỳ hiện tại chưa đăng ký</h6>
+            @if (Model.CurrentNotRegistered.Any())
+            {
+                <table class="table table-bordered mb-4">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width:5%">STT</th>
+                            <th style="width:15%">Mã MH</th>
+                            <th style="width:40%">Tên MH</th>
+                            <th style="width:10%">TC</th>
+                            <th style="width:15%">Loại MH</th> 
+                            <th style="width:15%">Điểm TB</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int i = 1;
+                        }
+                        @foreach (var c in Model.CurrentNotRegistered)
+                        {
+                            <tr>
+                                <td>@(i++)</td>
+                                <td>@c.MaMh</td>
+                                <td>@c.TenMh</td>
+                                <td>@c.SoTc</td>
+                                <td>@(c.LoaiMh == true ? "Bắt buộc" : "Tự chọn")</td> 
+                                <td>_</td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-success mb-4">Bạn đã đăng ký hết các môn trong kỳ này.</div>
+            }
+
+            <!-- 2. Môn trượt cùng kỳ trước -->
+            <h6>2. Môn trượt cùng kỳ trước</h6>
+            @if (Model.PrevFailed.Any())
+            {
+                <table class="table table-bordered mb-4">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width:5%">STT</th>
+                            <th style="width:15%">Mã MH</th>
+                            <th style="width:40%">Tên MH</th>
+                            <th style="width:10%">TC</th>
+                            <th style="width:15%">Loại MH</th> 
+                            <th style="width:15%">Điểm TB</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int j = 1;
+                        }
+                        @foreach (var c in Model.PrevFailed)
+                        {
+                            <tr>
+                                <td>@(j++)</td>
+                                <td>@c.MaMh</td>
+                                <td>@c.TenMh</td>
+                                <td>@c.SoTc</td>
+                                <td>@(c.LoaiMh == true ? "Bắt buộc" : "Tự chọn")</td> 
+                                <td>@c.Grade?.ToString("0.##")</td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-info mb-4">Không có môn trượt kỳ trước.</div>
+            }
+
+            <!-- 3. Môn cùng kỳ năm trước chưa đăng ký -->
+            <h6>3. Môn cùng kỳ năm trước chưa đăng ký</h6>
+            @if (Model.PrevYearNotRegistered.Any())
+            {
+                <table class="table table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width:5%">STT</th>
+                            <th style="width:15%">Mã MH</th>
+                            <th style="width:40%">Tên MH</th>
+                            <th style="width:10%">TC</th>
+                            <th style="width:15%">Loại MH</th>
+                            <th style="width:15%">Điểm TB</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int k = 1;
+                        }
+                        @foreach (var c in Model.PrevYearNotRegistered)
+                        {
+                            <tr>
+                                <td>@(k++)</td>
+                                <td>@c.MaMh</td>
+                                <td>@c.TenMh</td>
+                                <td>@c.SoTc</td>
+                                <td>@(c.LoaiMh == true ? "Bắt buộc" : "Tự chọn")</td> 
+                                <td>_</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-success">Bạn đã đăng ký hết môn cùng kỳ năm trước.</div>
+            }
+        </div>
+    </div>
+</div>

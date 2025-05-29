@@ -1,0 +1,234 @@
+﻿@model QLSV.Models.Sinhvien
+
+@{
+    ViewData["Title"] = "Chỉnh sửa Sinh viên";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-11 col-lg-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 text-white">CHỈNH SỬA SINH VIÊN</h5>
+                        <a asp-action="Index" class="btn btn-light btn-sm">
+                            <i class="bi bi-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+                    <form asp-action="Edit" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        <input type="hidden" asp-for="MaSv" />
+
+                        <div class="text-center mb-4">
+                            <img id="preview" src="@Model.Anh" alt="Ảnh sinh viên" width="150" class="rounded-circle" />
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="MaSv" class="form-label fw-medium">Mã Sinh viên</label>
+                                    <input asp-for="MaSv" class="form-control" readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Anh" class="form-label fw-medium">Ảnh đại diện</label>
+                                    <input type="file" name="Anh" class="form-control" onchange="previewImage(event)" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="HoTen" class="form-label fw-medium">Họ và tên</label>
+                                    <input asp-for="HoTen" class="form-control" />
+                                    <span asp-validation-for="HoTen" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label fw-medium">Giới tính</label>
+                                    <div class="d-flex gap-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" asp-for="GioiTinh" value="true" id="gioiTinhNam" />
+                                            <label class="form-check-label" for="gioiTinhNam">Nam</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" asp-for="GioiTinh" value="false" id="gioiTinhNu" />
+                                            <label class="form-check-label" for="gioiTinhNu">Nữ</label>
+                                        </div>
+                                    </div>
+                                    <span asp-validation-for="GioiTinh" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Cccd" class="form-label fw-medium">CCCD</label>
+                                    <input asp-for="Cccd" class="form-control" />
+                                    <span asp-validation-for="Cccd" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="DanToc" class="form-label fw-medium">Dân tộc</label>
+                                    <input asp-for="DanToc" class="form-control" />
+                                    <span asp-validation-for="DanToc" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="NgaySinh" class="form-label fw-medium">Ngày sinh</label>
+                                    <input asp-for="NgaySinh" class="form-control" type="date" />
+                                    <span asp-validation-for="NgaySinh" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Sdt" class="form-label fw-medium">Số điện thoại</label>
+                                    <input asp-for="Sdt" class="form-control" />
+                                    <span asp-validation-for="Sdt" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="QueQuan" class="form-label fw-medium">Quê quán</label>
+                            <input asp-for="QueQuan" class="form-control" />
+                            <span asp-validation-for="QueQuan" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="DiaChi" class="form-label fw-medium">Địa chỉ thường trú</label>
+                            <input asp-for="DiaChi" class="form-control" />
+                            <span asp-validation-for="DiaChi" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Email" class="form-label fw-medium">Email</label>
+                                    <input asp-for="Email" class="form-control" type="email" />
+                                    <span asp-validation-for="Email" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="TenDn" class="form-label fw-medium">Tên đăng nhập</label>
+                                    <input asp-for="TenDn" class="form-control" />
+                                    <span asp-validation-for="TenDn" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Password" class="form-label fw-medium">Mật khẩu</label>
+                            <div class="input-group">
+                                <input asp-for="Password" type="password" id="passwordField" class="form-control"
+                                       value="@Model.Password" placeholder="Nhập mật khẩu mới" />
+                                <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()" id="togglePasswordBtn">
+                                    <i class="bi bi-eye-slash"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="MaKhoa" class="form-label fw-medium">Khoa</label>
+                                    <select asp-for="MaKhoa" class="form-select" asp-items="ViewBag.MaKhoa"></select>
+                                    <span asp-validation-for="MaKhoa" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="MaNganh" class="form-label fw-medium">Ngành</label>
+                                    <select asp-for="MaNganh" class="form-select" asp-items="ViewBag.MaNganh"></select>
+                                    <span asp-validation-for="MaNganh" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="MaLop" class="form-label fw-medium">Lớp</label>
+                                    <select asp-for="MaLop" class="form-select" asp-items="ViewBag.MaLop"></select>
+                                    <span asp-validation-for="MaLop" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="MaCtdt" class="form-label fw-medium">Chương trình đào tạo</label>
+                                    <select asp-for="MaCtdt" class="form-select" asp-items="ViewBag.MaCtdt"></select>
+                                    <span asp-validation-for="MaCtdt" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="MaNk" class="form-label fw-medium">Niên khóa</label>
+                                    <select asp-for="MaNk" class="form-select" asp-items="ViewBag.MaNk"></select>
+                                    <span asp-validation-for="MaNk" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save-fill me-1"></i> Lưu thay đổi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function previewImage(event) {
+            var file = event.target.files[0];
+            if (file) {
+                var output = document.getElementById('preview');
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    output.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function togglePassword() {
+            var passwordField = document.getElementById("passwordField");
+            var toggleBtn = document.getElementById("togglePasswordBtn").querySelector("i");
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleBtn.classList.remove("bi-eye-slash");
+                toggleBtn.classList.add("bi-eye");
+            } else {
+                passwordField.type = "password";
+                toggleBtn.classList.remove("bi-eye");
+                toggleBtn.classList.add("bi-eye-slash");
+            }
+        }
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

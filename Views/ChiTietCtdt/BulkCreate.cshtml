@@ -1,0 +1,160 @@
+﻿@using QLSV.ViewModel
+@model BulkCreateViewModel
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h3 class="mb-0 text-white">Thêm môn học vào CTDT: @Model.MaCtdt</h3>
+    </div>
+    <div class="card-body">
+        <form asp-action="BulkCreate" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="MaCtdt" />
+
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-sm">
+                    <thead class="thead-light text-center">
+                        <tr>
+                            <th class="align-middle">Chọn</th>
+                            <th class="align-middle">Mã MH</th>
+                            <th class="align-middle">Tên môn học</th>
+                            <th class="align-middle">Loại môn</th>
+                            <th class="align-middle">Học kỳ</th>
+                            <th class="align-middle">Năm học</th>
+                            <th class="align-middle">Nhóm HP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.MonHocSelections.Count; i++)
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox"
+                                               asp-for="MonHocSelections[@i].IsSelected" />
+                                        <input type="hidden" asp-for="MonHocSelections[@i].MaMh" />
+                                    </div>
+                                </td>
+                                <td class="align-middle">@Model.MonHocSelections[i].MaMh</td>
+                                <td class="align-middle">@Model.MonHocSelections[i].TenMh</td>
+                                <td>
+                                    <select asp-for="MonHocSelections[@i].LoaiMh"
+                                            class="form-control form-control-sm"
+                                            disabled="@(!Model.MonHocSelections[i].IsSelected)">
+                                        <option value="">-- Chọn loại --</option>
+                                        <option value="true" selected="@(Model.MonHocSelections[i].LoaiMh == true)">Bắt buộc</option>
+                                        <option value="false" selected="@(Model.MonHocSelections[i].LoaiMh == false)">Tự chọn</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select asp-for="MonHocSelections[@i].MaHk"
+                                            class="form-control form-control-sm"
+                                            disabled="@(!Model.MonHocSelections[i].IsSelected)">
+                                        <option value="">-- Chọn HK --</option>
+                                        @foreach (var hk in Model.HkList)
+                                        {
+                                            <option value="@hk.Value" selected="@(hk.Value == Model.MonHocSelections[i].MaHk)">@hk.Text</option>
+                                        }
+                                    </select>
+                                </td>
+                                <td>
+                                    <select asp-for="MonHocSelections[@i].MaNh"
+                                            class="form-control form-control-sm"
+                                            disabled="@(!Model.MonHocSelections[i].IsSelected)">
+                                        <option value="">-- Chọn năm --</option>
+                                        @foreach (var nh in Model.NhList)
+                                        {
+                                            <option value="@nh.Value" selected="@(nh.Value == Model.MonHocSelections[i].MaNh)">@nh.Text</option>
+                                        }
+                                    </select>
+                                </td>
+                                <td>
+                                    <select asp-for="MonHocSelections[@i].MaNhomHp"
+                                            class="form-control form-control-sm"
+                                            disabled="@(!Model.MonHocSelections[i].IsSelected)">
+                                        <option value="">-- Chọn nhóm HP --</option>
+                                        @foreach (var nhp in Model.NhomHpList)
+                                        {
+                                            <option value="@nhp.Value" selected="@(nhp.Value == Model.MonHocSelections[i].MaNhomHp)">@nhp.Text</option>
+                                        }
+                                    </select>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-end mt-3">
+                <button type="submit" class="btn btn-success me-2">Lưu thay đổi</button>
+                <a asp-action="Details" asp-controller="Ctdt" asp-route-id="@Model.MaCtdt"
+                   class="btn btn-outline-secondary">Hủy</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cấu hình giá trị mặc định cho từng cột
+            const DEFAULT_VALUES = {
+                'LoaiMh': 'true',  // Mặc định là "Tự chọn"
+                'MaHk': 'HK1',      // Học kỳ 1
+                'MaNh': 'NH1'      // Năm học 2023
+            };
+
+            // Xử lý khi checkbox thay đổi
+            document.querySelectorAll('input[type="checkbox"][name*="IsSelected"]').forEach(checkbox => {
+                const handleCheckboxChange = () => {
+                    const row = checkbox.closest('tr');
+                    const isChecked = checkbox.checked;
+
+                    // Áp dụng cho tất cả dropdown trong hàng
+                    row.querySelectorAll('select').forEach(select => {
+                        select.disabled = !isChecked;
+
+                        if (isChecked) {
+                            // Lấy tên field (LoaiMh/MaHk/MaNh)
+                            const fieldName = select.name.match(/MonHocSelections\[\d+\]\.(\w+)/)[1];
+
+                            // Gán giá trị mặc định nếu chưa có
+                            if (!select.value && DEFAULT_VALUES[fieldName]) {
+                                select.value = DEFAULT_VALUES[fieldName];
+                            }
+                        } else {
+                            select.value = '';
+                        }
+                    });
+                };
+
+                checkbox.addEventListener('change', handleCheckboxChange);
+                handleCheckboxChange(); // Kích hoạt ngay khi tải trang
+            });
+
+            // Xử lý form submit
+            $('form').on('submit', function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        if (response.success) {
+                            window.location.href = response.redirectUrl;
+                        } else {
+                            alert(response.error || 'Đã xảy ra lỗi khi xử lý');
+                        }
+                    },
+                    error: function() {
+                        alert('Đã xảy ra lỗi khi kết nối với server');
+                    }
+                });
+            });
+        });
+    </script>
+}

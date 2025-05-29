@@ -1,0 +1,216 @@
+﻿@model QLSV.Models.Ctdt
+
+@{
+    ViewData["Title"] = "Chi tiết Chương trình đào tạo";
+    Layout = "~/Views/Shared/_layoutAdmin.cshtml";
+}
+
+<style>
+    .container-custom {
+        background: #d1e0eb;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        color: #0c2a53;
+        max-width: 90%;
+        margin: auto;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    h1 {
+        font-size: 24px;
+        font-weight: bold;
+        color: #0b2343;
+    }
+
+    .details-content dl {
+        background: white;
+        padding: 15px;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    dt {
+        font-weight: bold;
+        color: #193b6a;
+    }
+
+</style>
+
+<div class="container-custom">
+    <div class="section-header">
+        <h1>Thông tin CTĐT
+            <a asp-action="Index" class="btn btn-light btn-sm float-end">
+                <i class="bi bi-arrow-left"></i> Quay lại
+            </a>
+        </h1>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-tabs" id="CTDT_Tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab" aria-controls="general" aria-selected="true">
+                Thông tin chung
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="details-tab" data-bs-toggle="tab" data-bs-target="#chitiet-content" type="button" role="tab" aria-controls="chitiet-content" aria-selected="false">
+                Chi tiết CTĐT
+            </button>
+        </li>
+    </ul>
+
+    <!-- Nội dung tab -->
+    <div class="tab-content" style=" padding-top: 5px">
+        <!-- Tab Thông tin chung -->
+        <div class="tab-pane fade show active" id="general" role="tabpanel">
+            <div class="details-content">
+                <dl class="row">
+                    <dt class="col-sm-4"><strong>Mã CTĐT:</strong></dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.MaCtdt)</dd>
+
+                    <dt class="col-sm-4"><strong>Tên CTĐT:</strong></dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.TenCtdt)</dd>
+
+                   
+                    <dt class="col-sm-4"><strong>Khoa:</strong></dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.MaKhoaNavigation.TenKhoa)</dd>
+
+                    <dt class="col-sm-4"><strong>Ngành:</strong></dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.MaNganhNavigation.TenNganh)</dd>
+
+
+                    <dt class="col-sm-4"><strong>Hình thức ĐT:</strong></dt>
+                    <dd class="col-sm-8">@(Model.HinhThucDt ? "Chính quy" : "Liên thông")</dd>
+
+                    <dt class="col-sm-4"><strong>Tổng số TC:</strong></dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.TongSoTc)</dd>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Tab Chi tiết CTĐT (Nội dung sẽ được tải động) -->
+        <div class="tab-pane fade" id="chitiet-content" role="tabpanel">
+            <p class="text-center text-muted mt-3">Đang tải dữ liệu...</p> 
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between mt-3">
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model?.MaCtdt" class="btn btn-primary">
+                <i class="bi bi-pencil-fill me-1"></i> Chỉnh sửa
+            </a>
+                <a asp-controller="ChiTietCtdt" asp-action="BulkCreate" asp-route-maCtdt="@Model?.MaCtdt" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Thêm mới Chi tiết CTĐT
+                </a>
+            </div>
+        </div>
+        
+    </div>
+
+<!-- AJAX để tải nội dung tab Chi tiết CTĐT -->
+<script>
+    function loadChiTiet(maCtdt, page) {
+        $.ajax({
+            url: "@Url.Action("LoadChiTiet", "ChiTietCtdt")",
+            type: "GET",
+            data: { maCtdt: maCtdt, page: page },
+            success: function (data) {
+                $("#chitiet-content").html(data);
+                bindPagination(); // Gán lại sự kiện sau khi nội dung thay đổi
+            },
+            error: function (xhr) {
+                console.error("AJAX lỗi:", xhr.responseText);
+            }
+        });
+    }
+
+    function bindPagination() {
+        $(".pagination a").on("click", function (e) {
+            e.preventDefault(); // Ngăn load lại trang
+            var url = new URL($(this).attr("href"), window.location.origin);
+            var page = url.searchParams.get("page");
+            var maCtdt = "@Model.MaCtdt";
+            loadChiTiet(maCtdt, page);
+        });
+    }
+
+    $(document).ready(function () {
+        $("#details-tab").on("click", function () {
+            var maCtdt = "@Model.MaCtdt";
+            loadChiTiet(maCtdt, 1);
+        });
+
+        bindPagination(); // Gán lần đầu khi view load
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Lấy tab đang mở từ URL hoặc localStorage, nếu không có thì mặc định là #general
+        let urlParams = new URLSearchParams(window.location.search);
+        let activeTab = urlParams.get("activeTab") || localStorage.getItem("activeTab") || "#general";
+
+        // Kích hoạt tab đã lưu hoặc từ URL
+        let tabToActivate = document.querySelector(`[data-bs-target='${activeTab}']`);
+        if (tabToActivate) {
+            new bootstrap.Tab(tabToActivate).show();
+        }
+
+        // Cập nhật href của nút "Back to List" nếu tồn tại
+        let backToList = document.getElementById("backToList");
+        if (backToList) {
+            backToList.setAttribute("href", `/Ctdt/Index?activeTab=${encodeURIComponent(activeTab)}`);
+        }
+
+        // Gọi hàm cập nhật nút ban đầu
+        toggleButtons(activeTab);
+
+        // Xử lý sự kiện khi chuyển tab
+        document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
+            tab.addEventListener("shown.bs.tab", function (event) {
+                let selectedTab = event.target.getAttribute("data-bs-target");
+                localStorage.setItem("activeTab", selectedTab);
+
+                // Cập nhật lại href của "Back to List" mỗi khi đổi tab
+                if (backToList) {
+                    backToList.setAttribute("href", `/Ctdt/Index?activeTab=${encodeURIComponent(selectedTab)}`);
+                }
+
+                // Cập nhật nút hiển thị
+                toggleButtons(selectedTab);
+            });
+        });
+
+        // Hàm ẩn/hiện nút chỉnh sửa và thêm mới dựa trên tab
+        function toggleButtons(activeTab) {
+            let btnEdit = document.getElementById("btn-edit");
+            let btnAdd = document.getElementById("btn-add");
+
+            if (activeTab === "#general") {
+                btnEdit.style.display = "block";
+                btnAdd.style.display = "none";
+            } else if (activeTab === "#chitiet-content") {
+                btnEdit.style.display = "none";
+                btnAdd.style.display = "block";
+            }
+        }
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        var activeTab = urlParams.get('activeTab');
+        if (activeTab) {
+            var element = document.querySelector(activeTab);
+            if (element) {
+                element.scrollIntoView({ behavior: "smooth" });
+            }
+        }
+    });
+</script>

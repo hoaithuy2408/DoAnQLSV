@@ -1,0 +1,405 @@
+﻿@model QLSV.Models.Sinhvien
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_layoutAdmin.cshtml";
+}
+<style>
+    .container-custom {
+        background: #d1e0eb;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        color: #0c2a53;
+        width: 90%;
+        margin: auto;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    h1 {
+        font-size: 24px;
+        font-weight: bold;
+        color: #0b2343;
+    }
+
+    .details-content dl {
+        background: white;
+        padding: 15px;
+        border-radius: 5px;
+    }
+
+    dt {
+        font-weight: bold;
+        color: #193b6a;
+    }
+
+    .nav-tabs .nav-link {
+        color: #495057;
+        font-weight: 500;
+        border: 1px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+        .nav-tabs .nav-link.active {
+            color: #0b2343;
+            background-color: #f8f9fa;
+            border-color: #dee2e6 #dee2e6 #f8f9fa;
+            font-weight: 600;
+        }
+
+        .nav-tabs .nav-link:hover:not(.active) {
+            border-color: #e9ecef #e9ecef #dee2e6;
+            color: #0b2343;
+        }
+    
+    .img-thumbnail {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid #0b2343;
+    }
+    .student-profile-container {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .student-profile-header {
+        background-color: #3498db;
+        color: white;
+        padding: 15px 20px;
+    }
+
+    .profile-title {
+        margin: 0;
+        font-size: 1.4rem;
+    }
+
+    .student-profile-body {
+        padding: 20px;
+    }
+
+    .profile-section {
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: #f9f9f9;
+        border-radius: 6px;
+    }
+
+    .section-title {
+        color: #2c3e50;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 8px;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+    }
+
+    .info-item {
+        display: flex;
+        margin-bottom: 10px;
+        align-items: center;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #34495e;
+        min-width: 180px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+        .info-label i {
+            margin-right: 8px;
+            width: 20px;
+            text-align: center;
+        }
+
+    .info-value {
+        color: #2c3e50;
+        flex: 1;
+        padding: 5px 0;
+    }
+
+</style>
+
+<div class="container-custom">
+    <div class="section-header">
+        <h1>Thông tin sinh viên
+            
+            <a asp-action="Index" class="btn btn-light btn-sm float-end">
+                <i class="bi bi-arrow-left"></i> Quay lại
+            </a>
+        </h1>
+    </div>
+    @if (!string.IsNullOrEmpty(Model.Anh))
+    {
+        <img src="@Model.Anh" alt="Ảnh Sinh viên" width="150" class="d-block mx-auto rounded-circle" />
+    }
+    else
+    {
+        <p><strong>Ảnh:</strong> Chưa có ảnh</p>
+    }
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-tabs" id="CTDT_Tabs" role="tablist" style="padding-top: 10px">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab" aria-controls="general" aria-selected="true">
+                Thông tin Sinh viên
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="details-tab" data-bs-toggle="tab" data-bs-target="#chitiet-khht-sv" type="button" role="tab" aria-controls="chitiet-khht-sv" aria-selected="false">
+                KHHT Sinh viên
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="result-tab" data-bs-toggle="tab" data-bs-target="#kqht-tab" type="button" role="tab" aria-controls="kqht-tab" aria-selected="false">
+                Kết quả học tập
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="registered-tab" data-bs-toggle="tab" data-bs-target="#graduation-tab" type="button" role="tab" aria-controls="graduation-tab" aria-selected="false">
+                Xét Tốt nghiệp
+            </button>
+        </li>
+
+    </ul>
+
+    <!-- Nội dung tab -->
+    <div class="tab-content" style="margin: 10px;">
+        <!-- Tab Thông tin chung -->
+        <div class="tab-pane fade show active" id="general" role="tabpanel">
+            <div class="student-profile-container">
+                <div class="student-profile-body">
+                    <div class="row">
+                        <!-- Cột thông tin chính -->
+                        <div class="col-md-6">
+                            <div class="profile-section">
+                                <h5 class="section-title"><i class="bi bi-info-circle"></i> Thông tin cá nhân</h5>
+                                <div class="info-item">
+                                    <span class="info-label"> Mã Sinh Viên:</span>
+                                    <span class="info-value">@Html.DisplayFor(model => model.MaSv)</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label"> Họ và Tên:</span>
+                                    <span class="info-value">@Html.DisplayFor(model => model.HoTen)</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label"> Giới tính:</span>
+                                    <span class="info-value">@(Model.GioiTinh ? "Nam" : "Nữ")</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label"> Ngày sinh:</span>
+                                    <span class="info-value">@Html.DisplayFor(model => model.NgaySinh)</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label"> CCCD:</span>
+                                    <span class="info-value">@Html.DisplayFor(model => model.Cccd)</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label"> Dân tộc:</span>
+                                    <span class="info-value">@Html.DisplayFor(model => model.DanToc)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cột thông tin liên hệ -->
+                        <div class="col-md-6">
+                            <div class="profile-section">
+                                <h5 class="section-title"><i class="bi bi-person-lines-fill"></i> Thông tin liên hệ</h5>
+                                <div class="info-item">
+                                    <span class="info-label"> Số điện thoại:</span>
+                                    <span class="info-value">@Html.DisplayFor(model => model.Sdt)</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label"> Email:</span>
+                                    <span class="info-value">@Html.DisplayFor(model => model.Email)</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label"> Tên đăng nhập:</span>
+                                    <span class="info-value">@Html.DisplayFor(model => model.TenDn)</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Mật khẩu:</span>
+                                    <span class="info-value">••••••••</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Quê quán:</span>
+                                    <span class="info-value">@Html.DisplayFor(model => model.QueQuan)</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label"> Địa chỉ:</span>
+                                    <span class="info-value">@Html.DisplayFor(model => model.DiaChi)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thông tin học vụ -->
+                    <div class="profile-section mt-4">
+                        <h5 class="section-title"><i class="bi bi-mortarboard"></i> Thông tin học vụ</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <span class="info-label"> Khoa:</span>
+                                    <span class="info-value">@Html.DisplayFor(model => model.MaKhoaNavigation.TenKhoa)</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <span class="info-label"> Ngành:</span>
+                                    <span class="info-value">@Html.DisplayFor(model => model.MaNganhNavigation.TenNganh)</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <span class="info-label"> CTĐT:</span>
+                                    <span class="info-value">@Html.DisplayFor(model => model.MaCtdtNavigation.TenCtdt)</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <span class="info-label"> Lớp:</span>
+                                    <span class="info-value">@Html.DisplayFor(model => model.MaLopNavigation.TenLop)</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <span class="info-label"> Niên khóa:</span>
+                                    <span class="info-value">@Html.DisplayFor(model => model.MaNkNavigation.TenNk)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Tab KHHT Sinh viên -->
+        <div class="tab-pane fade" id="chitiet-khht-sv" role="tabpanel">
+            <div id="khht-content">Đang tải dữ liệu...</div>
+        </div>
+
+        <!-- Tab Kết quả học tập -->
+        <div class="tab-pane fade" id="kqht-tab" role="tabpanel">
+            <div id="kqht-content">Đang tải dữ liệu...</div>
+        </div>
+
+        <div class="tab-pane fade" id="graduation-tab" role="tabpanel">
+            <div id="graduate-content">Chưa có nội dung.</div>
+        </div>
+
+    </div>
+
+
+    <div class="d-flex justify-content-between mt-3" id="btn-actions">
+      
+        
+    </div>
+
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        // Hàm ẩn/hiện nút "Chỉnh sửa" theo tab
+        function toggleButtons(tabId) {
+            if (tabId === '#general') {
+                $('#btn-edit').show();
+            } else {
+                $('#btn-edit').hide();
+            }
+        }
+
+        // Mặc định: hiện nút ở tab đầu tiên
+        toggleButtons('#general');
+
+        // Sự kiện chuyển tab
+        $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+            const targetTab = $(e.target).data('bs-target');  // Lấy tab được chọn
+            toggleButtons(targetTab);  // Ẩn/hiện nút "Chỉnh sửa"
+
+            const maSv = '@Model.MaSv';
+            console.log("➡️ Đã chuyển sang tab:", targetTab, "| Mã SV:", maSv);
+
+            // 🔷 Gọi ChiTietKHHTSinhVien
+            if (targetTab === '#chitiet-khht-sv') {
+                console.log("🔄 Đang gọi dữ liệu KHHT Sinh viên...");
+                $.ajax({
+                    url: '@Url.Action("ChiTietKHHTSinhVien", "Sinhvien")',
+                    type: 'GET',
+                    data: { maSv: maSv },
+                    beforeSend: function () {
+                        console.log("📡 Đang gửi Ajax tới ChiTietKHHTSinhVien...");
+                        $('#chitiet-khht-sv').html('Đang tải dữ liệu...');
+                    },
+                    success: function (response) {
+                        console.log("✅ Dữ liệu KHHT nhận về:", response);
+                        $('#chitiet-khht-sv').html(response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("❌ Lỗi Ajax KHHT:");
+                        console.log("Status:", status);
+                        console.log("Error:", error);
+                        console.log("Response:", xhr.responseText);
+                        $('#chitiet-khht-sv').html('Không có dữ liệu phù hợp.');
+                    }
+                });
+            }
+
+            //  Gọi KetQuaHocTap
+            if (targetTab === '#kqht-tab') {
+                console.log("🔄 Đang gọi dữ liệu Kết quả học tập...");
+                $.ajax({
+                    url: '@Url.Action("KetQuaHocTapSinhVien", "Sinhvien")',
+                    type: 'GET',
+                    data: { maSv: maSv },
+                    beforeSend: function () {
+                        console.log("📡 Đang gửi Ajax tới KetQuaHocTapSinhVien...");
+                        $('#kqht-content').html('Đang tải kết quả học tập...');
+                    },
+                    success: function (response) {
+                        console.log("✅ Dữ liệu KQHT nhận về:", response);
+                        if (response && response.trim() !== "") {
+                            $('#kqht-content').html(response);
+                        } else {
+                            console.warn("⚠️ Dữ liệu KQHT trả về rỗng!");
+                            $('#kqht-content').html('Không có dữ liệu.');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("❌ Lỗi Ajax KQHT:");
+                        console.log("Status:", status);
+                        console.log("Error:", error);
+                        console.log("Response:", xhr.responseText);
+                        $('#kqht-content').html('Không thể tải kết quả học tập.');
+                    }
+                });
+            }
+            if (targetTab === '#graduation-tab') {
+
+                console.log("🔄 Đang gọi dữ liệu Xét Tốt nghiệp...");
+                $.ajax({
+                    url: '@Url.Action("XetTotNghiep", "Sinhvien")', // action bạn định nghĩa
+                    type: 'GET',
+                    data: { maSv: maSv },
+                    beforeSend: function () {
+                    $('#graduate-content').html('Đang tải kết quả xét tốt nghiệp...');
+                },
+                success: function (response) {
+                $('#graduate-content').html(response);
+            },
+            error: function () {
+                $('#graduate-content').html('Chưa cấu hình tiêu chí tốt nghiệp');
+            }
+        });
+        }
+        });
+    });
+</script>
+

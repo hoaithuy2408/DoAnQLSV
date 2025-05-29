@@ -1,0 +1,198 @@
+﻿@model IEnumerable<QLSV.Models.Khoa>
+@{
+    ViewData["Title"] = "Quản lý Khoa";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+
+    string searchTerm = ViewBag.SearchTerm as string ?? "";
+    string sortColumn = ViewData["SortColumn"]?.ToString() ?? "MaKhoa";
+    string sortOrder = ViewData["SortOrder"]?.ToString() ?? "asc";
+    int currentPage = (int)(ViewData["CurrentPage"] ?? 1);
+    int totalPages = (int)(ViewData["TotalPages"] ?? 1);
+    int pageSize = (int)(ViewBag.PageSize ?? 8);
+
+    Func<string, string> toggleOrder = col =>
+        sortColumn == col
+            ? (sortOrder == "asc" ? "desc" : "asc")
+            : "asc";
+}
+
+<div class="card shadow rounded-lg border-0 mb-4">
+    <div class="card-header bg-primary text-white py-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="h5 mb-0" style="color:white;">Quản lý Khoa</h2>
+            @if (User.IsInRole("Them"))
+            {
+                <a asp-action="Create" class="btn btn-light btn-sm rounded-pill shadow-sm">
+                    <i class="bi bi-plus-lg me-1"></i> Tạo mới
+                </a>
+            }
+        </div>
+    </div>
+
+    <div class="card-body p-4">
+        <!-- Search -->
+        <form method="get" class="mb-4">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="input-group shadow-sm">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        <input type="text"
+                        name="searchTerm"
+                        class="form-control border-start-0"
+                        placeholder="Tìm kiếm mã hoặc tên khoa..."
+                        value="@searchTerm" />
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search me-1"></i> Tìm kiếm
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Table -->
+        <div class="table-responsive rounded-3 shadow-sm">
+            <table class="table table-striped table-hover align-middle mb-0 text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th>STT</th>
+                        <th>
+                            <a asp-action="Index"
+                            asp-route-searchTerm="@searchTerm"
+                            asp-route-sortColumn="MaKhoa"
+                            asp-route-sortOrder="@toggleOrder("MaKhoa")"
+                            asp-route-page="1"
+                            class="text-decoration-none text-dark">
+                                Mã Khoa
+                                @(sortColumn == "MaKhoa"
+                                        ? (sortOrder == "asc" ? " 🔼" : " 🔽")
+                                        : "")
+                            </a>
+                        </th>
+                        <th>Tên Khoa</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int stt = (currentPage - 1) * pageSize + 1;
+                    }
+                    @foreach (var kb in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@stt</td>
+                            <td >@kb.MaKhoa</td>
+                            <td >@kb.TenKhoa</td>
+                            <td>
+                                <div class="d-flex justify-content-center gap-2">
+                                    @if (User.IsInRole("Sua"))
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@kb.MaKhoa"
+                                        class="btn btn-outline-primary btn-sm rounded-circle"
+                                        data-bs-toggle="tooltip" title="Sửa">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </a>
+                                    }
+                                    <a asp-action="Details" asp-route-id="@kb.MaKhoa"
+                                       class="btn btn-outline-info btn-sm rounded-circle"
+                                       data-bs-toggle="tooltip" title="Xem">
+                                        <i class="bi bi-eye-fill"></i>
+                                    </a>
+                                    @if (User.IsInRole("Xoa"))
+                                    {
+                                        <a asp-action="Delete" asp-route-id="@kb.MaKhoa"
+                                           class="btn btn-outline-danger btn-sm rounded-circle"
+                                           data-bs-toggle="tooltip" title="Xóa">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                        stt++;
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        @if (totalPages > 1)
+        {
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination pagination-sm justify-content-center mb-0">
+                    <li class="page-item @(currentPage==1?"disabled":"")">
+                        <a class="page-link" asp-action="Index"
+                           asp-route-searchTerm="@searchTerm"
+                           asp-route-sortColumn="@sortColumn"
+                           asp-route-sortOrder="@sortOrder"
+                           asp-route-page="1">
+                            <i class="bi bi-chevron-double-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item @(currentPage==1?"disabled":"")">
+                        <a class="page-link" asp-action="Index"
+                           asp-route-searchTerm="@searchTerm"
+                           asp-route-sortColumn="@sortColumn"
+                           asp-route-sortOrder="@sortOrder"
+                           asp-route-page="@(currentPage-1)">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+                    </li>
+
+                    @{
+                        int start = Math.Max(1, currentPage - 2);
+                        int end = Math.Min(totalPages, currentPage + 2);
+                        if (start > 1)
+                        {
+                            <li class="page-item disabled"><span class="page-link">…</span></li>
+                            ;
+                        }
+                        for (int i = start; i <= end; i++)
+                        {
+                            <li class="page-item @(i==currentPage?"active":"")">
+                                <a class="page-link" asp-action="Index"
+                                   asp-route-searchTerm="@searchTerm"
+                                   asp-route-sortColumn="@sortColumn"
+                                   asp-route-sortOrder="@sortOrder"
+                                   asp-route-page="@i">@i</a>
+                            </li>
+                        }
+                        if (end < totalPages)
+                        {
+                            <li class="page-item disabled"><span class="page-link">…</span></li>
+                            ;
+                        }
+                    }
+
+                    <li class="page-item @(currentPage==totalPages?"disabled":"")">
+                        <a class="page-link" asp-action="Index"
+                           asp-route-searchTerm="@searchTerm"
+                           asp-route-sortColumn="@sortColumn"
+                           asp-route-sortOrder="@sortOrder"
+                           asp-route-page="@(currentPage+1)">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                    <li class="page-item @(currentPage==totalPages?"disabled":"")">
+                        <a class="page-link" asp-action="Index"
+                           asp-route-searchTerm="@searchTerm"
+                           asp-route-sortColumn="@sortColumn"
+                           asp-route-sortOrder="@sortOrder"
+                           asp-route-page="@totalPages">
+                            <i class="bi bi-chevron-double-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function(){
+          $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}

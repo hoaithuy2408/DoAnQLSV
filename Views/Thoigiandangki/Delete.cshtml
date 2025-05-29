@@ -1,0 +1,74 @@
+﻿@model QLSV.Models.Thoigiandangky
+
+@{
+    ViewData["Title"] = "Xóa thời gian đăng ký";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-11 col-lg-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 text-white">XÁC NHẬN XÓA THỜI GIAN ĐĂNG KÝ</h5>
+                        <a asp-action="Index" class="btn btn-light btn-sm">
+                            <i class="bi bi-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+                    <div class="alert alert-danger" role="alert">
+                        <h5 class="alert-heading">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i> Cảnh báo quan trọng
+                        </h5>
+                        <p class="mb-0">Bạn sắp xóa thời gian đăng ký này. Thao tác này không thể hoàn tác và có thể ảnh hưởng đến các dữ liệu liên quan.</p>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <th width="30%" class="bg-light">Năm học</th>
+                                    <td>@Model.MaNhNavigation?.TenNh</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">Học kỳ</th>
+                                    <td>@Model.MaHkNavigation?.TenHk</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">Ngày bắt đầu</th>
+                                    <td>@Model.NgayBatDau.ToString("dd/MM/yyyy HH:mm")</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">Ngày kết thúc</th>
+                                    <td>@Model.NgayKetThuc.ToString("dd/MM/yyyy HH:mm")</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">Trạng thái</th>
+                                    <td>
+                                        <span class="badge @(Model.ChoPhepDangKy ? "bg-success" : "bg-secondary")">
+                                            @(Model.ChoPhepDangKy ? "Đang mở đăng ký" : "Đã đóng đăng ký")
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <form asp-action="Delete" class="d-flex justify-content-between mt-4">
+                        <input type="hidden" asp-for="MaNh" />
+                        <input type="hidden" asp-for="MaHk" />
+
+                        <button type="submit" class="btn btn-danger px-4" onclick="return confirm('Bạn có chắc chắn muốn xóa thời gian đăng ký này?')">
+                            <i class="bi bi-trash-fill me-2"></i> Xác nhận xóa
+                        </button>
+
+                       
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

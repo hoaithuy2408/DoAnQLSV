@@ -1,0 +1,94 @@
+﻿@model PagedList.IPagedList<QLSV.Models.CtCtdt>
+
+@{
+    Layout = null;
+} <!-- Đảm bảo PartialView không có Layout -->
+@if (Model == null || !Model.Any())
+{
+
+    <p class=" text-center">Không có dữ liệu chi tiết CTĐT.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead style="text-align:center">
+            <tr>
+                <th>STT</th>
+                <th>Môn học</th>
+                <th>Học kỳ</th>
+                <th>Năm học</th>
+                <th>Nhóm HP</th>
+                <th>Loại môn học</th>
+                <th>Hành động</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int stt = (Model.PageNumber - 1) * Model.PageSize + 1;
+            }
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align:center">@stt</td>
+                    <td>@item.MaMhNavigation?.TenMh</td>
+                    <td>@item.MaHkNavigation?.TenHk</td>
+                    <td>@item.MaNhNavigation?.TenNh</td>
+                    <td>@item.MaNhomHpNavigation?.TenNhomHp</td>
+                    <td>@(item.LoaiMh ? "Bắt buộc" : "Tự chọn")</td>
+                    <td>
+                        <div class="d-flex justify-content-center gap-2">
+                        <a asp-controller="ChiTietCtdt" asp-action="Edit"
+                           asp-route-maCtdt="@item.MaCtdt" asp-route-maMh="@item.MaMh"
+                           class="btn btn-outline-primary btn-sm rounded-circle"
+                           data-bs-toggle="tooltip" title="Sửa">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+                        <a asp-controller="ChiTietCtdt" asp-action="Delete"
+                           asp-route-maCtdt="@item.MaCtdt" asp-route-maMh="@item.MaMh"
+                           class="btn btn-outline-danger btn-sm rounded-circle"
+                           data-bs-toggle="tooltip" title="Xóa">
+                            <i class="bi bi-trash-fill"></i>
+                        </a>
+                        </div>
+                    </td>
+                </tr>
+                stt ++;
+            }
+
+        </tbody>
+
+    </table>
+    <div class="d-flex justify-content-center my-3">
+        <ul class="pagination">
+            @if (Model.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("LoadChiTiet", new { maCtdt = ViewBag.MaCtdt, page = 1 })">«</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("LoadChiTiet", new { maCtdt = ViewBag.MaCtdt, page = Model.PageNumber - 1 })">‹</a>
+                </li>
+            }
+
+            @for (int i = 1; i <= Model.PageCount; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("LoadChiTiet", new { maCtdt = ViewBag.MaCtdt, page = i })">@i</a>
+                </li>
+            }
+
+            @if (Model.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("LoadChiTiet", new { maCtdt = ViewBag.MaCtdt, page = Model.PageNumber + 1 })">›</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("LoadChiTiet", new { maCtdt = ViewBag.MaCtdt, page = Model.PageCount })">»</a>
+                </li>
+            }
+        </ul>
+    </div>
+
+
+}

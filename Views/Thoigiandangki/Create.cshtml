@@ -1,0 +1,84 @@
+﻿@model QLSV.Models.Thoigiandangky
+
+@{
+    ViewData["Title"] = "Thêm Thời gian đăng ký";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-11 col-lg-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 text-white">THÊM THỜI GIAN ĐĂNG KÝ MỚI</h5>
+                        <a asp-action="Index" class="btn btn-light btn-sm">
+                            <i class="bi bi-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4"></div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="MaNh" class="form-label fw-medium">Năm học</label>
+                                    <select asp-for="MaNh" class="form-select" asp-items="ViewBag.MaNh">
+                                        <option value="">-- Chọn năm học --</option>
+                                    </select>
+                                    <span asp-validation-for="MaNh" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="MaHk" class="form-label fw-medium">Học kỳ</label>
+                                    <select asp-for="MaHk" class="form-select" asp-items="ViewBag.MaHk">
+                                        <option value="">-- Chọn học kỳ --</option>
+                                    </select>
+                                    <span asp-validation-for="MaHk" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="NgayBatDau" class="form-label fw-medium">Ngày bắt đầu</label>
+                                    <input type="datetime-local" asp-for="NgayBatDau" class="form-control" />
+                                    <span asp-validation-for="NgayBatDau" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="NgayKetThuc" class="form-label fw-medium">Ngày kết thúc</label>
+                                    <input type="datetime-local" asp-for="NgayKetThuc" class="form-control" />
+                                    <span asp-validation-for="NgayKetThuc" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group form-switch mb-4">
+                            <input class="form-check-input" type="checkbox" asp-for="ChoPhepDangKy" />
+                            <label class="form-check-label fw-medium" asp-for="ChoPhepDangKy">Cho phép đăng ký</label>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-plus-circle-fill me-2"></i> Thêm mới
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

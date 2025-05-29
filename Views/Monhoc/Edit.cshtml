@@ -1,0 +1,70 @@
+﻿@model QLSV.Models.Monhoc
+
+@{
+    ViewData["Title"] = "Chỉnh sửa Môn Học";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-11 col-lg-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 text-white">CHỈNH SỬA MÔN HỌC</h5>
+                        <a asp-action="Index" class="btn btn-light btn-sm">
+                            <i class="bi bi-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        <input type="hidden" asp-for="MaMh" />
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="MaMh" class="form-label fw-medium">Mã Môn Học</label>
+                                    <input asp-for="MaMh" class="form-control" readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="SoTc" class="form-label fw-medium">Số Tín Chỉ</label>
+                                    <input asp-for="SoTc" class="form-control" />
+                                    <span asp-validation-for="SoTc" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="TenMh" class="form-label fw-medium">Tên Môn Học</label>
+                            <input asp-for="TenMh" class="form-control" />
+                            <span asp-validation-for="TenMh" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="MaBm" class="form-label fw-medium">Bộ Môn</label>
+                            <select asp-for="MaBm" class="form-select" asp-items="ViewBag.MaBm"></select>
+                            <span asp-validation-for="MaBm" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save-fill me-1"></i> Lưu thay đổi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

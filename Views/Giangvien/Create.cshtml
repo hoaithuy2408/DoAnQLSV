@@ -1,0 +1,128 @@
+﻿@model QLSV.Models.Giangvien
+
+@{
+    ViewData["Title"] = "Xóa Giảng viên";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-11 col-lg-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 text-white">Thêm mới Giảng viên</h5>
+                        <a asp-action="Index" class="btn btn-light btn-sm">
+                            <i class="bi bi-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" enctype="multipart/form-data" onsubmit="return validateForm()">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4 text-center">
+                                <img id="preview" src="/images/avt.jpg" class="rounded-circle mb-3" style="width:140px;height:140px;object-fit:cover;" />
+                                <input type="file" name="Anh" class="form-control form-control-sm" accept="image/*" onchange="previewImage(event)" />
+                                <span id="AnhError" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row gy-3">
+                                    <div class="col-md-6">
+                                        <label asp-for="MaGv" class="form-label fw-medium">Mã Giảng viên</label>
+                                        <input asp-for="MaGv" class="form-control" />
+                                        <span asp-validation-for="MaGv" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label asp-for="HoTen" class="form-label fw-medium">Họ và tên</label>
+                                        <input asp-for="HoTen" class="form-control" />
+                                        <span asp-validation-for="HoTen" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label asp-for="NgaySinh" class="form-label fw-medium">Ngày sinh</label>
+                                        <input asp-for="NgaySinh" type="date" class="form-control" />
+                                        <span asp-validation-for="NgaySinh" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-medium">Giới tính</label>
+                                        <div class="d-flex gap-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="GioiTinh" value="true" id="gtNam" />
+                                                <label class="form-check-label" for="gtNam">Nam</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="GioiTinh" value="false" id="gtNu" />
+                                                <label class="form-check-label" for="gtNu">Nữ</label>
+                                            </div>
+                                        </div>
+                                        <span id="GioiTinhError" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label asp-for="QueQuan" class="form-label fw-medium">Quê quán</label>
+                                        <input asp-for="QueQuan" class="form-control" />
+                                        <span asp-validation-for="QueQuan" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label asp-for="Sdt" class="form-label fw-medium">SĐT</label>
+                                        <input asp-for="Sdt" class="form-control" />
+                                        <span asp-validation-for="Sdt" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label asp-for="Email" class="form-label fw-medium">Email</label>
+                                        <input asp-for="Email" type="email" class="form-control" />
+                                        <span asp-validation-for="Email" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label asp-for="TenDn" class="form-label fw-medium">Tên đăng nhập</label>
+                                        <input asp-for="TenDn" class="form-control" />
+                                        <span asp-validation-for="TenDn" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label asp-for="Password" class="form-label fw-medium">Mật khẩu</label>
+                                        <input asp-for="Password" type="password" class="form-control" />
+                                        <span asp-validation-for="Password" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label asp-for="MaBm" class="form-label fw-medium">Bộ môn</label>
+                                        <select asp-for="MaBm" class="form-select" asp-items="ViewBag.MaBm"></select>
+                                        <span asp-validation-for="MaBm" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save-fill me-1"></i> Thêm mới
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    function previewImage(event) {
+    const reader = new FileReader();
+    reader.onload = e => document.getElementById('preview').src = e.target.result;
+    reader.readAsDataURL(event.target.files[0]);
+    }
+    function validateForm() {
+    let isValid = true;
+    const anhInput = document.getElementById('Anh');
+    const anhError = document.getElementById('AnhError');
+    if (!anhInput.files.length) { anhError.innerText = 'Vui lòng tải lên ảnh.'; isValid = false; } else { anhError.innerText = ''; }
+    const gtNam = document.getElementById('gtNam');
+    const gtNu = document.getElementById('gtNu');
+    const gtError = document.getElementById('GioiTinhError');
+    if (!gtNam.checked && !gtNu.checked) { gtError.innerText = 'Vui lòng chọn giới tính.'; isValid = false; } else { gtError.innerText = ''; }
+    return isValid;
+    }
+</script>
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

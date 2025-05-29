@@ -1,0 +1,134 @@
+﻿@model QLSV.ViewModel.XetTotNghiepViewModel
+
+<div class="card mt-3">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0 text-white">Kết quả xét tốt nghiệp</h5>
+    </div>
+    <div class="card-body">
+        <dl class="row mb-4">
+            <dt class="col-sm-3">Mã sinh viên</dt>
+            <dd class="col-sm-9">@Model.MaSv</dd>
+
+            <dt class="col-sm-3">Họ và tên</dt>
+            <dd class="col-sm-9">@Model.HoTen</dd>
+
+            <dt class="col-sm-3">Chương trình đào tạo</dt>
+            <dd class="col-sm-9">@Model.MaCTDT</dd>
+        </dl>
+
+        <table class="table table-bordered mb-4">
+            <thead class="table-light text-center">
+                <tr>
+                    <th>Tiêu chí</th>
+                    <th>Yêu cầu</th>
+                    <th>Thực tế</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Tổng tín chỉ tích lũy</td>
+                    <td class="text-center">@Model.SoTCYeuCau</td>
+                    <td class="text-center">@Model.SoTCDaTichLuy</td>
+                </tr>
+                <tr>
+                    <td>Tín chỉ bắt buộc</td>
+                    <td class="text-center">@Model.SoTC_BatBuoc</td>
+                    <td class="text-center">@Model.SoTCBatBuocDat</td>
+                </tr>
+                <tr>
+                    <td>Tín chỉ tự chọn</td>
+                    <td class="text-center">@Model.SoTC_TuChon</td>
+                    <td class="text-center">@Model.SoTCTuChonDat</td>
+                </tr>
+                <tr>
+                    <td>GPA tích lũy</td>
+                    <td class="text-center">@Model.GpaYeuCau.ToString("0.00")</td>
+                    <td class="text-center">@Model.GpaTichLuy.ToString("0.00")</td>
+                </tr>
+                <tr>
+                    <td>Số môn chưa đạt</td>
+                    <td class="text-center">0</td>
+                    <td class="text-center">@Model.SoMonChuaDat</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="mb-4">
+            <h5>
+                Kết luận:
+                @if (Model.DatTotNghiep)
+                {
+                    <span class="text-success">ĐẠT TỐT NGHIỆP</span>
+                }
+                else
+                {
+                    <span class="text-danger">CHƯA ĐẠT TỐT NGHIỆP</span>
+                }
+            </h5>
+        </div>
+        @if (Model.DatTotNghiep)
+        {
+
+        }
+        else
+        {
+            @* Bảng chung theo nhóm học phần và môn học *@
+            <h5 class="mt-4">Chi tiết nhóm học phần & môn học chưa đạt</h5>
+            <table class="table table-bordered">
+                <thead class="table-dark text-center">
+                    <tr>
+                        <th>Nhóm học phần</th>
+                        <th>STT</th>
+                        <th>Mã môn</th>
+                        <th>Tên môn</th>
+                        <th>TC</th>
+                        <th>Loại MH</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var nh in Model.NhomHocPhan)
+                    {
+                        <tr class="table-secondary">
+                            <td colspan="7">
+                                <strong>@nh.TenNhomHp</strong><br />
+                                <span>- Tín chỉ bắt buộc: cần @nh.SoTcBatBuocCan, đã đạt @nh.SoTcBatBuocDat</span><br />
+                                <span>- Tín chỉ tự chọn: cần @nh.SoTcTuChonCan, đã đạt @nh.SoTcTuChonDat</span><br />
+                                <span class="fw-semibold text-@(nh.Dat ? "success" : "danger")">
+                                    @(nh.Dat ? "✓ Đạt yêu cầu nhóm" : "✗ Chưa đạt yêu cầu nhóm")
+                                </span>
+                            </td>
+
+                        </tr>
+                        @for (int i = 0; i < nh.MonHoc.Count; i++)
+                        {
+                            var mh = nh.MonHoc[i];
+                            <tr>
+                                <td></td>
+                                <td class="text-center">@(i + 1)</td>
+                                <td>@mh.MaMh</td>
+                                <td>@mh.TenMh</td>
+                                <td class="text-center">@mh.SoTc</td>
+                                <td class="text-center">@mh.LoaiMh</td>
+                                <td class="text-center">
+                                    @if (mh.TrangThai.Contains("Chưa đăng ký"))
+                                    {
+                                        <span class="text-warning">@mh.TrangThai</span>
+                                    }
+                                    else if (mh.TrangThai.Contains("Chưa đạt"))
+                                    {
+                                        <span class="text-danger">@mh.TrangThai</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-success">Đạt</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

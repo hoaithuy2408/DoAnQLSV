@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="shortcut icon" type="image/png" href="~/images/logos/logo-removebg.png">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+</head>
+<body>
+    @RenderBody()
+
+    <!-- Thêm dòng này ngay trước </body> -->
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
