@@ -157,10 +157,10 @@
             </div>
             <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
 
-            <!-- Google reCAPTCHA -->
-            <div class="g-recaptcha mb-3 w-100" data-sitekey="@ViewBag.SiteKey" data-callback="verifyCaptcha"></div>
-            <!-- Thêm trường để lưu trữ giá trị reCAPTCHA -->
-            <input type="hidden" id="recaptchaResponse" name="g-recaptcha-response" />
+            @* <!-- Google reCAPTCHA --> *@
+            @* <div class="g-recaptcha mb-3 w-100" data-sitekey="@ViewBag.SiteKey" data-callback="verifyCaptcha"></div> *@
+            @* <!-- Thêm trường để lưu trữ giá trị reCAPTCHA --> *@
+            @* <input type="hidden" id="recaptchaResponse" name="g-recaptcha-response" /> *@
 
             <button type="submit" class="w-100">Đăng nhập</button>
         </form>

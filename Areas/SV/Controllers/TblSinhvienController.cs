@@ -73,7 +73,8 @@ namespace QLSV.Areas.SV.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> LoginSV(string username, string password)
         {
-            // Kiểm tra reCAPTCHA trước
+            // Tạm tắt reCAPTCHA - comment hoặc xóa đoạn sau:
+            /*
             var recaptchaResponse = Request.Form["g-recaptcha-response"];
             var isValidCaptcha = await Validate(_configuration["ReCaptcha:SecretKey"], recaptchaResponse);
 
@@ -83,11 +84,12 @@ namespace QLSV.Areas.SV.Controllers
                 ViewBag.SiteKey = _configuration["ReCaptcha:SiteKey"];
                 return View();
             }
+            */
 
             // Validate input
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                ModelState.AddModelError("", "Vui lòng nhập đầy đủ thông tin"); 
+                ModelState.AddModelError("", "Vui lòng nhập đầy đủ thông tin");
                 ViewBag.SiteKey = _configuration["ReCaptcha:SiteKey"];
                 return View();
             }
@@ -107,7 +109,6 @@ namespace QLSV.Areas.SV.Controllers
         new Claim(ClaimTypes.Email, sinhVien.Email ?? string.Empty),
         new Claim("AccountType", "SinhVien"),
         new Claim(ClaimTypes.Role, "SinhVien")
-
     };
 
             var identity = new ClaimsIdentity(claims, "SinhVienCookie");
@@ -124,6 +125,7 @@ namespace QLSV.Areas.SV.Controllers
 
             return RedirectToAction("Index", "TblSinhvien");
         }
+
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = "SinhVienCookie")]
